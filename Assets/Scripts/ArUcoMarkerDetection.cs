@@ -51,8 +51,6 @@ namespace ArUcoDetectionHoloLensUnity
         public float RSmoothFactor=0.8f;
         public float VSmoothFactor=0.8f;
 
-        public bool trackStarted = false;
-
         /// <summary>
         /// Holder for the camera parameters (intrinsics and extrinsics)
         /// of the tracking sensor on the HoloLens 2
@@ -103,11 +101,11 @@ namespace ArUcoDetectionHoloLensUnity
         {
             Debug.Log("Starting...");
             markersDict = new Dictionary<int, ArucoMarker>();
-            trackStarted = false;
 
             foreach (GameObject markerObj in markerObjs)
             {
                 ArucoMarker curMarker = markerObj.GetComponent<ArucoMarker>();
+                curMarker.trackStarted = false;
                 Debug.Log(curMarker.ID);
                 markersDict.Add(curMarker.ID, curMarker);
                 markerObj.transform.localScale = new Vector3(markerSize, markerSize, markerSize);
@@ -297,7 +295,7 @@ namespace ArUcoDetectionHoloLensUnity
                     // curMarker.markerObj.transform.SetPositionAndRotation(
                     //    CvUtils.GetVectorFromMatrix(transformUnityWorld),
                     //    CvUtils.GetQuatFromMatrix(transformUnityWorld));
-                    if (trackStarted)
+                    if (curMarker.trackStarted)
                     {
                         GameObject tHolder = new GameObject();
                         tHolder.transform.SetPositionAndRotation(
@@ -311,7 +309,7 @@ namespace ArUcoDetectionHoloLensUnity
                         curMarker.markerObj.transform.SetPositionAndRotation(
                         CvUtils.GetVectorFromMatrix(transformUnityWorld),
                         CvUtils.GetQuatFromMatrix(transformUnityWorld));
-                        trackStarted = true;
+                        curMarker.trackStarted = true;
                     }
 
                     curMarker.newCoordTracked = true;
