@@ -41,14 +41,16 @@ public class GazeCursorController : MonoBehaviour
         var photonViews = FindObjectsOfType<PhotonView>();
         foreach (PhotonView view in photonViews)
         {
-            if (view.IsMine & myPhotoViewObj == null)
+            if (view.IsMine)
             { 
-                myPhotoViewObj = view.gameObject;
-                for (int i=0; i<myPhotoViewObj.transform.childCount; i++)
+                if (myPhotoViewObj == null)
                 {
-                    myPhotoViewObj.transform.GetChild(i).gameObject.GetComponent<Renderer>().material = myMaterial;
+                    myPhotoViewObj = view.gameObject;
+                    for (int i = 0; i < myPhotoViewObj.transform.childCount; i++)
+                    {
+                        myPhotoViewObj.transform.GetChild(i).gameObject.GetComponent<Renderer>().material = myMaterial;
+                    }
                 }
-
             } else 
             {
                 otherPhotoViewObj = view.gameObject;
