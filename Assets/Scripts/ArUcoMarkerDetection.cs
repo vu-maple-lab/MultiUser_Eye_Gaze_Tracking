@@ -45,7 +45,7 @@ namespace ArUcoDetectionHoloLensUnity
         public CvUtils.ArUcoDictionaryName arUcoDictionaryName;
 
         // Params for aruco detection
-        // Marker size in meters: 0.08 cm
+        // Marker size in meters: 0.08 m = 8 cm
         public float markerSize;
 
         public float RSmoothFactor=0.8f;

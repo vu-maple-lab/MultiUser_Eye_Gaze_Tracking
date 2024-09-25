@@ -2485,7 +2485,7 @@ MonoBehaviour:
   deviceType: 1
   sensorTypePv: 0
   arUcoDictionaryName: 0
-  markerSize: 0.08
+  markerSize: 0.16
   RSmoothFactor: 0.2
   VSmoothFactor: 0.2
   initTrackTotal: 15
