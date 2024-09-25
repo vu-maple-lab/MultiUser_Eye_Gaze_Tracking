@@ -9,12 +9,14 @@ public class ArucoMarker : MonoBehaviour
     public bool newCoordTracked;
     public GameObject transformToScreenObj;
     public GameObject markerObj;
+    [HideInInspector] public int initTrackCount;
     public bool trackStarted=false;
 
     // Start is called before the first frame update
     void Start()
     {
         trackStarted = false;
+        initTrackCount = 0;
     }
 
     // Update is called once per frame

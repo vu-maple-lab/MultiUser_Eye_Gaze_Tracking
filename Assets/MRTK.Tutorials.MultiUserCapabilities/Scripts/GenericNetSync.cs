@@ -1,11 +1,21 @@
+using Microsoft.MixedReality.Toolkit;
+using Microsoft.MixedReality.Toolkit.Input;
+using Microsoft.MixedReality.Toolkit.Utilities;
 using Photon.Pun;
+using System.IO;
 using UnityEngine;
 
 namespace MRTK.Tutorials.MultiUserCapabilities
 {
+    // Responsible for managing the objects of each user.
     public class GenericNetSync : MonoBehaviourPun, IPunObservable
     {
         [SerializeField] private bool isUser = default;
+        [SerializeField] private float defaultDistanceInMeters = 3;
+        public GameObject parentObj = default;
+        public GameObject ScreenObj = default;
+
+        public GameObject Cursor;
 
         private Camera mainCamera;
 
@@ -14,6 +24,8 @@ namespace MRTK.Tutorials.MultiUserCapabilities
 
         private Vector3 startingLocalPosition;
         private Quaternion startingLocalRotation;
+
+        private Vector3 lastHitPos = default;
 
         void IPunObservable.OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
         {
@@ -31,13 +43,22 @@ namespace MRTK.Tutorials.MultiUserCapabilities
 
         private void Start()
         {
-            mainCamera = Camera.main;
+            // mainCamera = Camera.main;
+            Cursor = GameObject.Find("DefaultGazeCursorCloseSurface(Clone)");
+            parentObj = GameObject.Find("ScreenObject");
+            ScreenObj = GameObject.Find("ScreenObject");
+            lastHitPos = Vector3.zero;
 
             if (isUser)
             {
-                if (TableAnchor.Instance != null) transform.parent = FindObjectOfType<TableAnchor>().transform;
-
+                if (parentObj != null)
+                {
+                    transform.parent = parentObj.transform;
+                }
+                // if (TableAnchor.Instance != null) transform.parent = FindObjectOfType<TableAnchor>().transform;
+                
                 if (photonView.IsMine) GenericNetworkManager.Instance.localUser = photonView;
+                
             }
 
             var trans = transform;
@@ -53,17 +74,32 @@ namespace MRTK.Tutorials.MultiUserCapabilities
         {
             if (!photonView.IsMine)
             {
-                var trans = transform;
-                trans.localPosition = networkLocalPosition;
-                trans.localRotation = networkLocalRotation;
+                transform.localPosition = networkLocalPosition;
+                transform.localRotation = networkLocalRotation;
             }
 
             if (photonView.IsMine && isUser)
             {
-                var trans = transform;
-                var mainCameraTransform = mainCamera.transform;
-                trans.position = mainCameraTransform.position;
-                trans.rotation = mainCameraTransform.rotation;
+                var gazeProvider = CoreServices.InputSystem?.EyeGazeProvider;
+                if (gazeProvider != null)
+                {    
+                    // EyeTrackingTarget lookedAtEyeTarget = EyeTrackingTarget.LookedAtEyeTarget;
+                    Vector3 curHitPos = gazeProvider.HitPosition;
+                    if (!curHitPos.Equals(lastHitPos))
+                    { 
+                        // if nothing is hit, gazeProvider.HitPosition returns the last hit pos data.
+                        // TODO: this is horrible approach, you should change to use physics.raycast for proper collider detection.
+                        transform.localPosition = ScreenObj.transform.InverseTransformPoint(curHitPos);
+                        lastHitPos = curHitPos; 
+                    }
+                    else
+                    {
+                        transform.localPosition = ScreenObj.transform.InverseTransformPoint(gazeProvider.GazeOrigin + gazeProvider.GazeDirection.normalized * defaultDistanceInMeters);
+                    }
+                    // transform.localPosition = ScreenObj.transform.InverseTransformPoint(Cursor.transform.position);
+                    transform.localRotation = Quaternion.Inverse(ScreenObj.transform.rotation) * Cursor.transform.rotation;
+                }
+         
             }
         }
     }

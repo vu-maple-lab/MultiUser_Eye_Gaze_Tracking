@@ -8,13 +8,25 @@ namespace MRTK.Tutorials.MultiUserCapabilities
         private PhotonView pv;
         private string username;
 
+        private int user_num;
+
         private void Start()
         {
             pv = GetComponent<PhotonView>();
 
             if (!pv.IsMine) return;
 
-            username = "User" + PhotonNetwork.NickName;
+            GameObject temp_user_name = GameObject.Find("User" + PhotonNetwork.NickName);
+            if (temp_user_name != null)
+            {
+                user_num = int.Parse(PhotonNetwork.NickName);
+                user_num = user_num + 1;
+                username = "User" + user_num.ToString();
+            }
+            else
+            {
+                username = "User" + PhotonNetwork.NickName;
+            }
             pv.RPC("PunRPC_SetNickName", RpcTarget.AllBuffered, username);
         }
 

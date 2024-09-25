@@ -6,8 +6,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using UnityEngine.UI;
-
-
+using Unity.VisualScripting.Antlr3.Runtime;
 
 public class ScreenTracker : MonoBehaviour
 {
@@ -17,12 +16,12 @@ public class ScreenTracker : MonoBehaviour
     public GameObject topRightMarker = default;
     public GameObject screenObj = default;
     public GameObject screenDispObj = default;
-    public List<ArucoMarker> markers; // Bottom Left, Bottom Right, Top Left, Top Right
-    public List<GameObject> markerObjs; // Bottom Left, Bottom Right, Top Left, Top Right
+    [HideInInspector] public List<ArucoMarker> markers; // Bottom Left, Bottom Right, Top Left, Top Right
+    [HideInInspector] public List<GameObject> markerObjs; // Bottom Left, Bottom Right, Top Left, Top Right
     public Text debugText;
 
     public bool screenCenterToMarkersDetermined = false;
-    public int screenCenterToMarkersDetermineFrames = 30;
+    public int screenCenterToMarkersDetermineFrames = 100;
 
     public float RSmoothFactor = 0.8f; // The positions
     public float VSmoothFactor = 0.8f;
@@ -31,6 +30,8 @@ public class ScreenTracker : MonoBehaviour
     public float screenHeight = 0;
 
     private bool trackStarted = false;
+    private int trackStartCount = 0;
+    public int initTrackTotal = 30;
 
     public int skipFrames = 3;
     private int _frameCount = 0;
@@ -39,6 +40,7 @@ public class ScreenTracker : MonoBehaviour
     void Start()
     {
         trackStarted = false;
+        trackStartCount = 0;
         markerObjs = new List<GameObject> { bottomLeftMarker, bottomRightMarker, topLeftMarker, topRightMarker };
         markers = new List<ArucoMarker>();
         
@@ -64,6 +66,8 @@ public class ScreenTracker : MonoBehaviour
             if ((!screenCenterToMarkersDetermined) & screenCenterToMarkersDetermineFrames > 0 & AllMarkersTracked())
             {
                 Debug.Log("All markers visible, determining marker to screen T");
+                debugText.text = string.Format("All markers visible, determining marker to screen T\n{0}\n{1}", screenObj.transform.position, screenObj.transform.eulerAngles);
+
                 DetermineCenterOnAllMarkersVisible();
                 DetermineScreenSizeOnAllMarkersVisible();
                 UpdateScreenObjScale();
@@ -74,7 +78,6 @@ public class ScreenTracker : MonoBehaviour
                 }
 
                 screenCenterToMarkersDetermineFrames--;
-                debugText.text = string.Format("All markers visible, determining marker to screen T\n{0}\n{1}", screenObj.transform.position, screenObj.transform.eulerAngles);
             }
             else if (screenCenterToMarkersDetermineFrames <= 0)
             {
@@ -91,7 +94,7 @@ public class ScreenTracker : MonoBehaviour
                     {
                         marker.GetComponent<ArucoMarker>().newCoordTracked = false;
                     }
-                    Debug.Log("Marker to Screen T determined, now normal tracking...");
+                    // Debug.Log("Marker to Screen T determined, now normal tracking...");
                     debugText.text = string.Format("Marker to Screen T determined, now normal tracking...\n{0}\n{1}", screenObj.transform.position, screenObj.transform.eulerAngles);
                 }
             }
@@ -161,15 +164,16 @@ public class ScreenTracker : MonoBehaviour
         // The markers have the same orientation (xyz)
 
         // Compute current screen center transform
-        if (trackStarted)
+        if (trackStartCount >= initTrackTotal)
         {
+            trackStarted = true;
             GameObject curTHolder = TransformUtils.AverageTransforms(markerObjs);
             TransformUtils.LerpTransforms(screenObj, curTHolder, RSmoothFactor, VSmoothFactor, screenObj);
             Destroy(curTHolder);
         } else
         {
             TransformUtils.AverageTransforms(markerObjs, screenObj);
-            trackStarted = true;
+            trackStartCount++;
         }
         
         // screenObj.transform.rotation = Quaternion.Slerp(screenObj.transform.rotation, curTHolder.transform.rotation, RSmoothFactor);
@@ -187,15 +191,23 @@ public class ScreenTracker : MonoBehaviour
 
     void DetermineScreenSizeOnAllMarkersVisible()
     {
-        List<Vector3> markerPositionsOnScreens = new List<Vector3>();
+        Vector3 BLScreenPos = screenObj.transform.InverseTransformPoint(bottomLeftMarker.transform.position);
+        Vector3 BRScreenPos = screenObj.transform.InverseTransformPoint(bottomRightMarker.transform.position);
+        Vector3 TLScreenPos = screenObj.transform.InverseTransformPoint(topLeftMarker.transform.position);
+        Vector3 TRScreenPos = screenObj.transform.InverseTransformPoint(topRightMarker.transform.position);
+        
+        /*
+        List <Vector3> markerPositionsOnScreens = new List<Vector3>();
         foreach (var marker in markers)
         {
             // Note: The marker and screen definition of "up" is z
             markerPositionsOnScreens.Add(screenObj.transform.TransformPoint(marker.markerObj.transform.position));
         }
+        */
         // Bottom Left, Bottom Right, Top Left, Top Right
-        screenWidth = (Mathf.Abs(markerPositionsOnScreens[0].x - markerPositionsOnScreens[1].x) + Mathf.Abs(markerPositionsOnScreens[2].x - markerPositionsOnScreens[3].x)) / 2;
-        screenHeight = (Mathf.Abs(markerPositionsOnScreens[2].y - markerPositionsOnScreens[0].y) + Mathf.Abs(markerPositionsOnScreens[3].y - markerPositionsOnScreens[1].y)) / 2;
+        screenWidth = (Mathf.Abs(BRScreenPos.x - BLScreenPos.x) + Mathf.Abs(TRScreenPos.x - TLScreenPos.x)) / 2;
+        screenHeight = (Mathf.Abs(TLScreenPos.y - BLScreenPos.y) + Mathf.Abs(TRScreenPos.y - BRScreenPos.y)) / 2;
+        // debugText.text += string.Format("\nWidth {0}, Height {1}", screenWidth, screenHeight);
     }
 
     void UpdateScreenObjScale()

@@ -50,6 +50,7 @@ namespace ArUcoDetectionHoloLensUnity
 
         public float RSmoothFactor=0.8f;
         public float VSmoothFactor=0.8f;
+        public int initTrackTotal = 15;
 
         /// <summary>
         /// Holder for the camera parameters (intrinsics and extrinsics)
@@ -61,7 +62,7 @@ namespace ArUcoDetectionHoloLensUnity
         /// Game object for to use for marker instantiation
         /// </summary>
         public List<GameObject> markerObjs;
-        public Dictionary<int, ArucoMarker> markersDict;
+        [HideInInspector] public Dictionary<int, ArucoMarker> markersDict;
 
         private bool _mediaFrameSourceGroupsStarted = false;
         private int _frameCount = 0;
@@ -150,7 +151,6 @@ namespace ArUcoDetectionHoloLensUnity
 
                 var detections = await Task.Run(() => _pvMediaFrameSourceGroup.DetectArUcoMarkers(_sensorType));
 
-                myText.text = string.Format("Completed Tracking Run...");
                 // Update the game object pose with current detections
                 UpdateArUcoDetections(detections);
 
@@ -295,8 +295,9 @@ namespace ArUcoDetectionHoloLensUnity
                     // curMarker.markerObj.transform.SetPositionAndRotation(
                     //    CvUtils.GetVectorFromMatrix(transformUnityWorld),
                     //    CvUtils.GetQuatFromMatrix(transformUnityWorld));
-                    if (curMarker.trackStarted)
+                    if (curMarker.initTrackCount >= initTrackTotal)
                     {
+                        curMarker.trackStarted = true;
                         GameObject tHolder = new GameObject();
                         tHolder.transform.SetPositionAndRotation(
                             CvUtils.GetVectorFromMatrix(transformUnityWorld),
@@ -309,7 +310,7 @@ namespace ArUcoDetectionHoloLensUnity
                         curMarker.markerObj.transform.SetPositionAndRotation(
                         CvUtils.GetVectorFromMatrix(transformUnityWorld),
                         CvUtils.GetQuatFromMatrix(transformUnityWorld));
-                        curMarker.trackStarted = true;
+                        curMarker.initTrackCount++;
                     }
 
                     curMarker.newCoordTracked = true;
@@ -317,7 +318,7 @@ namespace ArUcoDetectionHoloLensUnity
                     // string s = string.Format("Tracked Marker ID {0}", detectedMarker.Id);
                     // myText.text = s;
                 }
-                myText.text = trackedIds;
+                // myText.text = trackedIds;
             } else
             {
                 myText.text = "Began Streaming Sensor Frames. No Markers Found!";
