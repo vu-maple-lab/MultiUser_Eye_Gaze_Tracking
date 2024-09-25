@@ -58,7 +58,6 @@ namespace MRTK.Tutorials.MultiUserCapabilities
                 // if (TableAnchor.Instance != null) transform.parent = FindObjectOfType<TableAnchor>().transform;
                 
                 if (photonView.IsMine) GenericNetworkManager.Instance.localUser = photonView;
-                
             }
 
             var trans = transform;
