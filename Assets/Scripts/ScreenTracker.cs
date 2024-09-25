@@ -95,7 +95,8 @@ public class ScreenTracker : MonoBehaviour
                         marker.GetComponent<ArucoMarker>().newCoordTracked = false;
                     }
                     // Debug.Log("Marker to Screen T determined, now normal tracking...");
-                    debugText.text = string.Format("Marker to Screen T determined, now normal tracking...\n{0}\n{1}", screenObj.transform.position, screenObj.transform.eulerAngles);
+                    // debugText.text = string.Format("Marker to Screen T determined, now normal tracking...\n{0}\n{1}", screenObj.transform.position, screenObj.transform.eulerAngles);
+                    debugText.text = string.Format("Marker to Screen T determined, now normal tracking...");
                 }
             }
             _frameCount = 0;

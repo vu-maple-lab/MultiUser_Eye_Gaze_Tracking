@@ -9,6 +9,7 @@ public class GazeCursorController : MonoBehaviour
     [SerializeField] public float cursorScaleMax = 2.5f;
     [SerializeField] public float cursorScaleMin = 0.5f;
     [SerializeField] public GameObject slider;
+    [SerializeField] public Material myMaterial;
     private float cursorScaleGradient;
     private bool isOtherCursorVisible = true;
     private int otherCursorStyle = 0;
@@ -16,7 +17,7 @@ public class GazeCursorController : MonoBehaviour
 
     private bool isMyCursorVisible = false;
     private int myCursorStyle = 0;
-    private GameObject myPhotoViewObj;
+    private GameObject myPhotoViewObj = null;
     // Start is called before the first frame update
     void Start()
     {
@@ -40,9 +41,14 @@ public class GazeCursorController : MonoBehaviour
         var photonViews = FindObjectsOfType<PhotonView>();
         foreach (PhotonView view in photonViews)
         {
-            if (view.IsMine)
+            if (view.IsMine & myPhotoViewObj == null)
             { 
                 myPhotoViewObj = view.gameObject;
+                for (int i=0; i<myPhotoViewObj.transform.childCount; i++)
+                {
+                    myPhotoViewObj.transform.GetChild(i).gameObject.GetComponent<Renderer>().material = myMaterial;
+                }
+
             } else 
             {
                 otherPhotoViewObj = view.gameObject;
