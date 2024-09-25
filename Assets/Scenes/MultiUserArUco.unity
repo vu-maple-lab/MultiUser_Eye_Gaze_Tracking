@@ -184,6 +184,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 62894541}
     m_Modifications:
+    - target: {fileID: 430449111430787343, guid: 1093263a89abe47499cccf7dcb08effb, type: 3}
+      propertyPath: m_Size.y
+      value: 0.7932441
+      objectReference: {fileID: 0}
+    - target: {fileID: 430449111430787343, guid: 1093263a89abe47499cccf7dcb08effb, type: 3}
+      propertyPath: m_Center.y
+      value: -0.10337795
+      objectReference: {fileID: 0}
     - target: {fileID: 7307063430618434848, guid: 1093263a89abe47499cccf7dcb08effb, type: 3}
       propertyPath: sliderValue
       value: 0.5
@@ -242,7 +250,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7307063430618434851, guid: 1093263a89abe47499cccf7dcb08effb, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -0.0079
       objectReference: {fileID: 0}
     - target: {fileID: 7307063430618434851, guid: 1093263a89abe47499cccf7dcb08effb, type: 3}
       propertyPath: m_LocalRotation.w
@@ -541,6 +549,18 @@ PrefabInstance:
       propertyPath: maxDistance
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 6211250045826833496, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
+      propertyPath: maxViewDegrees
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 6211250045826833496, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
+      propertyPath: fixedVerticalPosition
+      value: -0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 6211250045826833496, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
+      propertyPath: useFixedVerticalPosition
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6598990275681704777, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -640,6 +660,26 @@ PrefabInstance:
     - target: {fileID: 8492400053782258143, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
       propertyPath: m_HorizontalAlignment
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8603747137572853076, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
+      propertyPath: m_Size.y
+      value: 1.3353255
+      objectReference: {fileID: 0}
+    - target: {fileID: 8603747137572853076, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
+      propertyPath: m_Size.z
+      value: 0.9999999
+      objectReference: {fileID: 0}
+    - target: {fileID: 8603747137572853076, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
+      propertyPath: m_Center.x
+      value: 0.000000058207657
+      objectReference: {fileID: 0}
+    - target: {fileID: 8603747137572853076, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
+      propertyPath: m_Center.y
+      value: -0.1676606
+      objectReference: {fileID: 0}
+    - target: {fileID: 8603747137572853076, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
+      propertyPath: m_Center.z
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9183269206479175209, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
       propertyPath: m_LocalScale.y

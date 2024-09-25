@@ -86,18 +86,21 @@ namespace MRTK.Tutorials.MultiUserCapabilities
                     // EyeTrackingTarget lookedAtEyeTarget = EyeTrackingTarget.LookedAtEyeTarget;
                     Vector3 curHitPos = gazeProvider.HitPosition;
                     if (!curHitPos.Equals(lastHitPos))
-                    { 
+                    {
                         // if nothing is hit, gazeProvider.HitPosition returns the last hit pos data.
-                        // TODO: this is horrible approach, you should change to use physics.raycast for proper collider detection.
+                        // TODO: this is horrible approach, you should change to use physics.raycast for proper collider detection. 
+                        // https://docs.unity3d.com/ScriptReference/Physics.Raycast.html
                         transform.localPosition = ScreenObj.transform.InverseTransformPoint(curHitPos);
+                        transform.localRotation = Quaternion.Inverse(ScreenObj.transform.rotation) * Quaternion.LookRotation(gazeProvider.HitNormal, Vector3.up);
                         lastHitPos = curHitPos; 
                     }
                     else
                     {
                         transform.localPosition = ScreenObj.transform.InverseTransformPoint(gazeProvider.GazeOrigin + gazeProvider.GazeDirection.normalized * defaultDistanceInMeters);
+                        transform.localRotation = Quaternion.Inverse(ScreenObj.transform.rotation) * Cursor.transform.rotation;
                     }
                     // transform.localPosition = ScreenObj.transform.InverseTransformPoint(Cursor.transform.position);
-                    transform.localRotation = Quaternion.Inverse(ScreenObj.transform.rotation) * Cursor.transform.rotation;
+                    
                 }
          
             }
