@@ -86,7 +86,7 @@ namespace MRTK.Tutorials.MultiUserCapabilities
                     Vector3 curHitPos = gazeProvider.HitPosition;
                     if (!curHitPos.Equals(lastHitPos))
                     {
-                        // if nothing is hit, gazeProvider.HitPosition returns the last hit pos data.
+                        // if nothing is hit, gazeProvider.HitPosition returns the last hit pos data; Used this fact to check if there is any hit positions.
                         // TODO: this is horrible approach, you should change to use physics.raycast for proper collider detection. 
                         // https://docs.unity3d.com/ScriptReference/Physics.Raycast.html
                         transform.localPosition = ScreenObj.transform.InverseTransformPoint(curHitPos);

@@ -186,11 +186,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 430449111430787343, guid: 1093263a89abe47499cccf7dcb08effb, type: 3}
       propertyPath: m_Size.y
-      value: 0.7932441
+      value: 1.149903
+      objectReference: {fileID: 0}
+    - target: {fileID: 430449111430787343, guid: 1093263a89abe47499cccf7dcb08effb, type: 3}
+      propertyPath: m_Size.z
+      value: 0.030000001
       objectReference: {fileID: 0}
     - target: {fileID: 430449111430787343, guid: 1093263a89abe47499cccf7dcb08effb, type: 3}
       propertyPath: m_Center.y
-      value: -0.10337795
+      value: 0.07495121
       objectReference: {fileID: 0}
     - target: {fileID: 7307063430618434848, guid: 1093263a89abe47499cccf7dcb08effb, type: 3}
       propertyPath: sliderValue
@@ -297,6 +301,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 419416334314042912, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -0.0154
+      objectReference: {fileID: 0}
     - target: {fileID: 419416334314042915, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
       propertyPath: m_text
       value: Cycle Through Other's Gaze Cursor
@@ -324,6 +332,18 @@ PrefabInstance:
     - target: {fileID: 873635201814573931, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
       propertyPath: m_RootOrder
       value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 873635201814573931, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 873635201814573931, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 873635201814573931, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.2
       objectReference: {fileID: 0}
     - target: {fileID: 873635201814573931, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
       propertyPath: m_LocalPosition.x
@@ -365,10 +385,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 873635201814573931, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1879986855381370587, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
       propertyPath: rows
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 2299550337215306262, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
+      propertyPath: iconQuadTexture
+      value: 
+      objectReference: {fileID: 2800000, guid: 8d0274d8bc6a17844a08b493920d9491, type: 3}
     - target: {fileID: 2307548368159464045, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
       propertyPath: m_Size.x
       value: 5.12
@@ -404,6 +432,10 @@ PrefabInstance:
     - target: {fileID: 2782317448646102324, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
       propertyPath: OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: GazeCursorController, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 3126666869814642214, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.024
       objectReference: {fileID: 0}
     - target: {fileID: 3165320754296392110, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
       propertyPath: iconStyle
@@ -449,13 +481,25 @@ PrefabInstance:
       propertyPath: iconQuadTexture
       value: 
       objectReference: {fileID: 2800000, guid: 2e264b2035e178e4dac9e40cfcf38662, type: 3}
+    - target: {fileID: 4187654251277012703, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.013
+      objectReference: {fileID: 0}
     - target: {fileID: 4225699108409048808, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4225699108895289112, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
+      propertyPath: m_text
+      value: Record Gaze
       objectReference: {fileID: 0}
     - target: {fileID: 4225699108895289112, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
       propertyPath: m_textAlignment
       value: 65535
+      objectReference: {fileID: 0}
+    - target: {fileID: 4225699108895289112, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
+      propertyPath: m_TextStyleHashCode
+      value: -1183493901
       objectReference: {fileID: 0}
     - target: {fileID: 4225699108895289112, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
       propertyPath: m_VerticalAlignment
@@ -517,6 +561,10 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 5438748085993296852, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -0.0147
+      objectReference: {fileID: 0}
     - target: {fileID: 5438748085993296855, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
       propertyPath: m_text
       value: Cycle Through My Gaze Cursor
@@ -541,6 +589,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5806836401589277905, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
+      propertyPath: iconQuadTexture
+      value: 
+      objectReference: {fileID: 2800000, guid: 7de780622ddab5e49b73d5d7a806faf9, type: 3}
     - target: {fileID: 6211250045826833496, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
       propertyPath: m_Enabled
       value: 1
@@ -564,6 +616,10 @@ PrefabInstance:
     - target: {fileID: 6211250045826833496, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
       propertyPath: useFixedVerticalPosition
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6535572241115846799, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.013
       objectReference: {fileID: 0}
     - target: {fileID: 6598990275681704777, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
       propertyPath: m_IsActive
@@ -609,9 +665,25 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 6766582015667425355, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
+      propertyPath: OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 62894546}
+    - target: {fileID: 6766582015667425355, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
+      propertyPath: OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: onToggleGazeRecording
+      objectReference: {fileID: 0}
+    - target: {fileID: 6766582015667425355, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
+      propertyPath: OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: GazeCursorController, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 6809481994514728774, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
       propertyPath: ButtonReleased.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7080936142556985648, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.0482
       objectReference: {fileID: 0}
     - target: {fileID: 7102484898435090800, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
       propertyPath: OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -654,8 +726,16 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 8492400053782258143, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
+      propertyPath: m_text
+      value: Stop Gaze Recording
+      objectReference: {fileID: 0}
+    - target: {fileID: 8492400053782258143, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
       propertyPath: m_textAlignment
       value: 65535
+      objectReference: {fileID: 0}
+    - target: {fileID: 8492400053782258143, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
+      propertyPath: m_TextStyleHashCode
+      value: -1183493901
       objectReference: {fileID: 0}
     - target: {fileID: 8492400053782258143, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
       propertyPath: m_VerticalAlignment
@@ -667,7 +747,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8603747137572853076, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
       propertyPath: m_Size.y
-      value: 1.3353255
+      value: 1.1263514
       objectReference: {fileID: 0}
     - target: {fileID: 8603747137572853076, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
       propertyPath: m_Size.z
@@ -675,11 +755,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8603747137572853076, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
       propertyPath: m_Center.x
-      value: 0.000000058207657
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8603747137572853076, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
       propertyPath: m_Center.y
-      value: -0.1676606
+      value: -0.06317544
       objectReference: {fileID: 0}
     - target: {fileID: 8603747137572853076, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
       propertyPath: m_Center.z
@@ -712,6 +792,10 @@ MonoBehaviour:
   cursorScaleMin: 0.5
   slider: {fileID: 14868933}
   myMaterial: {fileID: 2100000, guid: 31b75c16b0bd06c4c8f1476c7bd20a62, type: 2}
+  recordButton: {fileID: 862991347}
+  screenObj: {fileID: 1509323843}
+  isRecording: 0
+  recordingTrialCount: 0
 --- !u!1 &63870930
 GameObject:
   m_ObjectHideFlags: 0
@@ -2951,6 +3035,11 @@ Transform:
   m_Father: {fileID: 2013990392}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &862991347 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4225699108409048808, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
+  m_PrefabInstance: {fileID: 62894540}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &932511483
 GameObject:
   m_ObjectHideFlags: 0
@@ -3749,6 +3838,10 @@ PrefabInstance:
     - target: {fileID: 2645002551747710847, guid: 14cae43a723f13c48b7eb9496c8a09ab, type: 3}
       propertyPath: m_Name
       value: NetworkLobby
+      objectReference: {fileID: 0}
+    - target: {fileID: 2645002551747710847, guid: 14cae43a723f13c48b7eb9496c8a09ab, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2645002552411527826, guid: 14cae43a723f13c48b7eb9496c8a09ab, type: 3}
       propertyPath: photonUserPrefab

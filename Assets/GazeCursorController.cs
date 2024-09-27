@@ -1,7 +1,9 @@
 using Microsoft.MixedReality.Toolkit.UI;
 using Photon.Pun;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class GazeCursorController : MonoBehaviour
@@ -10,14 +12,22 @@ public class GazeCursorController : MonoBehaviour
     [SerializeField] public float cursorScaleMin = 0.5f;
     [SerializeField] public GameObject slider;
     [SerializeField] public Material myMaterial;
+    [SerializeField] public GameObject recordButton = null;
+    [SerializeField] public GameObject screenObj = null;
     private float cursorScaleGradient;
     private bool isOtherCursorVisible = true;
     private int otherCursorStyle = 0;
     private GameObject otherPhotoViewObj = null;
+    private GameObject buttonTMP = null;
 
     private bool isMyCursorVisible = false;
     private int myCursorStyle = 0;
     private GameObject myPhotoViewObj = null;
+    [HideInInspector] public bool isRecording;
+    [HideInInspector] public int recordingTrialCount;
+
+    private DateTime curStartTime;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -30,6 +40,11 @@ public class GazeCursorController : MonoBehaviour
         isOtherCursorVisible = true;
         isMyCursorVisible = true;
         onToggleMyCursorVisibility();
+
+        if (recordButton != null )
+        {
+            buttonTMP = recordButton.transform.Find("IconAndText").Find("TextMeshPro").gameObject;
+        }
     }
 
     // Update is called once per frame
@@ -38,6 +53,7 @@ public class GazeCursorController : MonoBehaviour
 
         // Retrieve (both) photonViews in the scene
         // Assumptions: 1. Only 2 photonViews are present. 2. One is my gaze, the other is the other's gaze.
+        // TODO: very inefficient code, try improve it in the future
         var photonViews = FindObjectsOfType<PhotonView>();
         foreach (PhotonView view in photonViews)
         {
@@ -54,6 +70,80 @@ public class GazeCursorController : MonoBehaviour
             } else 
             {
                 otherPhotoViewObj = view.gameObject;
+                break;
+            }
+        }
+
+        if (isRecording)
+        {
+            // Data to Save:
+            // My Gaze, local to screen
+            // Other's Gaze, local to screen
+            // My Screen Position
+            saveTransformData(
+                myPhotoViewObj.transform.localPosition.x, 
+                myPhotoViewObj.transform.localPosition.y, 
+                myPhotoViewObj.transform.localPosition.z,
+                myPhotoViewObj.transform.localRotation.w,
+                myPhotoViewObj.transform.localRotation.x,
+                myPhotoViewObj.transform.localRotation.y,
+                myPhotoViewObj.transform.localRotation.z,
+                curStartTime,
+                "my_Eye_Gaze_Transforms"
+                );
+            if (otherPhotoViewObj != null)
+            {
+                saveTransformData(
+                    otherPhotoViewObj.transform.localPosition.x,
+                    otherPhotoViewObj.transform.localPosition.y,
+                    otherPhotoViewObj.transform.localPosition.z,
+                    otherPhotoViewObj.transform.localRotation.w,
+                    otherPhotoViewObj.transform.localRotation.x,
+                    otherPhotoViewObj.transform.localRotation.y,
+                    otherPhotoViewObj.transform.localRotation.z,
+                    curStartTime,
+                    "other_Eye_Gaze_Transforms"
+                );
+            }
+
+            if (screenObj != null)
+            {
+                saveTransformData(
+                    screenObj.transform.localPosition.x,
+                    screenObj.transform.localPosition.y,
+                    screenObj.transform.localPosition.z,
+                    screenObj.transform.localRotation.w,
+                    screenObj.transform.localRotation.x,
+                    screenObj.transform.localRotation.y,
+                    screenObj.transform.localRotation.z,
+                    curStartTime,
+                    "screen_Track_Transforms"
+                );
+            }
+        }
+    }
+
+    public void saveTransformData(float px, float py, float pz, float rw, float rx, float ry, float rz, DateTime recordStartTime, string fileNamePrefix = "my_Eye_Gaze_Coordinate")
+    {
+        long unixTime = ((DateTimeOffset)recordStartTime).ToUnixTimeMilliseconds();
+        string unixTime_String = unixTime.ToString();
+        string timeStamp = recordStartTime.ToLocalTime().ToString("yyyyMMdd_HHmmss");
+        
+        if (isRecording)
+        {
+            string filepath_in_function2 = Application.persistentDataPath + "/" + fileNamePrefix + "_" + timeStamp + "_" + recordingTrialCount + ".csv";
+            //Debug.Log("filepath" + filepath_in_function2);
+            //string test_filePath = "U:/Users/yizhou.li@vanderbilt.edu/AppData/Local/Packages/Eyerecorder_pzq3xp76mxafg/LocalState/position_Cursor_IO.csv";
+            try
+            {
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(@filepath_in_function2, true))
+                {
+                    file.WriteLine(px + "," + py + "," + pz + "," + rw + "," + rx + "," + ry + "," + rz + "," + timeStamp + "," + unixTime_String);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Failed to save:  ", ex);
             }
         }
     }
@@ -142,5 +232,26 @@ public class GazeCursorController : MonoBehaviour
             cursorObj.transform.GetChild(visibleChildIdx).gameObject.GetComponent<Renderer>().enabled = true;
         }
 
+    }
+
+    public void onToggleGazeRecording()
+    {
+        if (isRecording)
+        {
+            recordingTrialCount++;
+            isRecording = false;
+            if (buttonTMP != null)
+            {
+                buttonTMP.GetComponent<TextMeshPro>().text = "Record Gaze Data";
+            }
+        } else
+        {
+            isRecording = true;
+            if (buttonTMP != null)
+            {
+                buttonTMP.GetComponent<TextMeshPro>().text = "Stop Recording Data";
+            }
+            curStartTime = DateTime.Now;
+        }
     }
 }

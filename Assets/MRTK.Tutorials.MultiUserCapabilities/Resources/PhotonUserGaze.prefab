@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3000569307421430846}
   - component: {fileID: 3000569307421430845}
   m_Layer: 0
-  m_Name: PhotonUser
+  m_Name: PhotonUserGaze
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
