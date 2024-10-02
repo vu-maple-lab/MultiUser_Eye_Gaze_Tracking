@@ -57,7 +57,6 @@ public class GazeCursorController : MonoBehaviour
         var photonViews = FindObjectsOfType<PhotonView>();
         foreach (PhotonView view in photonViews)
         {
-            Debug.Log(view.gameObject.name);
             if (view.IsMine)
             { 
                 if (myPhotoViewObj == null)

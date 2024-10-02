@@ -14,8 +14,10 @@ public class ScreenTracker : MonoBehaviour
     public GameObject bottomRightMarker = default;
     public GameObject topLeftMarker = default;
     public GameObject topRightMarker = default;
-    public GameObject screenObj = default;
-    public GameObject screenDispObj = default;
+    public GameObject screenObj = null;
+    public GameObject screenDispObj = null;
+    public GameObject screenFrame = null;
+    [SerializeField] Material screenMaterialGreen = null;
     [HideInInspector] public List<ArucoMarker> markers; // Bottom Left, Bottom Right, Top Left, Top Right
     [HideInInspector] public List<GameObject> markerObjs; // Bottom Left, Bottom Right, Top Left, Top Right
     public Text debugText = null;
@@ -68,7 +70,7 @@ public class ScreenTracker : MonoBehaviour
                 Debug.Log("All markers visible, determining marker to screen T");
                 if (debugText != null)
                 {
-                    debugText.text = string.Format("All markers visible, determining marker to screen T\n{0}\n{1}", screenObj.transform.position, screenObj.transform.eulerAngles);
+                    debugText.text = string.Format("Calibrating the screen transform. Keep the screen in view, wait until the virtual screen frame turns green.");
                 }
                 
 
@@ -98,11 +100,20 @@ public class ScreenTracker : MonoBehaviour
                     {
                         marker.GetComponent<ArucoMarker>().newCoordTracked = false;
                     }
-                    // Debug.Log("Marker to Screen T determined, now normal tracking...");
+                    if (screenFrame != null)
+                    {
+                        Debug.Log("Updating Frame Materials");
+                        for (int i = 0; i < screenFrame.transform.childCount; i++)
+                        {
+                            screenFrame.transform.GetChild(i).gameObject.GetComponent<Renderer>().material = screenMaterialGreen;
+                        }
+                    }
+                
+                    Debug.Log("Marker to Screen T determined, now normal tracking...");
                     // debugText.text = string.Format("Marker to Screen T determined, now normal tracking...\n{0}\n{1}", screenObj.transform.position, screenObj.transform.eulerAngles);
                     if (debugText != null)
                     {
-                        debugText.text = string.Format("Marker to Screen T determined, now normal tracking...");
+                        debugText.text = string.Format("");
                     }
                 }
             }
