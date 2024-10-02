@@ -13,7 +13,7 @@ PlayerSettings:
   useOnDemandResources: 0
   accelerometerFrequency: 60
   companyName: FJ - MapleLab
-  productName: ArucoTracker-2021
+  productName: KidneyGaze-Aruco
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
@@ -135,7 +135,9 @@ PlayerSettings:
     16:9: 1
     Others: 1
   bundleVersion: 0.1
-  preloadedAssets: []
+  preloadedAssets:
+  - {fileID: 4406109055307278223, guid: d19575632317b934db0eaeb50ceaf8fa, type: 2}
+  - {fileID: 5790922317652456449, guid: e780ea13a96c40a489440f578434c206, type: 2}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -834,14 +836,14 @@ PlayerSettings:
     Windows Store Apps: 3
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
-  metroPackageName: ArucoTracker-2021
+  metroPackageName: KidneyGaze-Aruco
   metroPackageVersion: 1.0.0.0
   metroCertificatePath: Assets\WSATestCertificate.pfx
   metroCertificatePassword: 
   metroCertificateSubject: FJ - MapleLab
   metroCertificateIssuer: FJ - MapleLab
   metroCertificateNotAfter: 802c0ab1ff1edc01
-  metroApplicationDescription: ArucoTracker-2021
+  metroApplicationDescription: KidneyGaze-Aruco
   wsaImages:
     65636: Assets/images/eyeGaze_50.png
     131272: Assets/images/eyeGaze_1240_600.png
