@@ -18,7 +18,7 @@ public class ScreenTracker : MonoBehaviour
     public GameObject screenDispObj = default;
     [HideInInspector] public List<ArucoMarker> markers; // Bottom Left, Bottom Right, Top Left, Top Right
     [HideInInspector] public List<GameObject> markerObjs; // Bottom Left, Bottom Right, Top Left, Top Right
-    public Text debugText;
+    public Text debugText = null;
 
     public bool screenCenterToMarkersDetermined = false;
     public int screenCenterToMarkersDetermineFrames = 100;
@@ -66,7 +66,11 @@ public class ScreenTracker : MonoBehaviour
             if ((!screenCenterToMarkersDetermined) & screenCenterToMarkersDetermineFrames > 0 & AllMarkersTracked())
             {
                 Debug.Log("All markers visible, determining marker to screen T");
-                debugText.text = string.Format("All markers visible, determining marker to screen T\n{0}\n{1}", screenObj.transform.position, screenObj.transform.eulerAngles);
+                if (debugText != null)
+                {
+                    debugText.text = string.Format("All markers visible, determining marker to screen T\n{0}\n{1}", screenObj.transform.position, screenObj.transform.eulerAngles);
+                }
+                
 
                 DetermineCenterOnAllMarkersVisible();
                 DetermineScreenSizeOnAllMarkersVisible();
@@ -96,7 +100,10 @@ public class ScreenTracker : MonoBehaviour
                     }
                     // Debug.Log("Marker to Screen T determined, now normal tracking...");
                     // debugText.text = string.Format("Marker to Screen T determined, now normal tracking...\n{0}\n{1}", screenObj.transform.position, screenObj.transform.eulerAngles);
-                    debugText.text = string.Format("Marker to Screen T determined, now normal tracking...");
+                    if (debugText != null)
+                    {
+                        debugText.text = string.Format("Marker to Screen T determined, now normal tracking...");
+                    }
                 }
             }
             _frameCount = 0;

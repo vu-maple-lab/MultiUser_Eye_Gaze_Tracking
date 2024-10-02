@@ -36,7 +36,7 @@ namespace ArUcoDetectionHoloLensUnity
     {
         private bool _isWorldAnchored = false;
 
-        public Text myText;
+        public Text myText=null;
 
         public CvUtils.DeviceTypeUnity deviceType;
 
@@ -147,7 +147,10 @@ namespace ArUcoDetectionHoloLensUnity
             if (_frameCount == skipFrames)
             {
                 Debug.Log("Starting to Track...");
-                myText.text = string.Format("Started Tracking Run...");
+                if (myText != null)
+                {
+                    myText.text = string.Format("Started Tracking Run...");
+                }
 
                 var detections = await Task.Run(() => _pvMediaFrameSourceGroup.DetectArUcoMarkers(_sensorType));
 
@@ -170,7 +173,10 @@ namespace ArUcoDetectionHoloLensUnity
         {
 #if ENABLE_WINMD_SUPPORT
             // Plugin doesn't work in the Unity editor
-            myText.text = "Initializing MediaFrameSourceGroups...";
+            if (myText != null)
+            {
+                myText.text = "Initializing MediaFrameSourceGroups...";
+            }
 
             // PV
             Debug.Log("HoloLensForCVUnity.ArUcoDetection.StartHoloLensMediaFrameSourceGroup: Setting up sensor frame streamer");
@@ -209,14 +215,20 @@ namespace ArUcoDetectionHoloLensUnity
             _pvMediaFrameSourceGroup.Enable(_sensorType);
 
             // Start media frame source groups
-            myText.text = "Starting MediaFrameSourceGroups...";
+            if (myText != null)
+            {
+                myText.text = "Starting MediaFrameSourceGroups...";
+            }
 
             // Photo video
             Debug.Log("HoloLensForCVUnity.ArUcoDetection.StartHoloLensMediaFrameSourceGroup: Starting the media frame source group");
             await _pvMediaFrameSourceGroup.StartAsync();
             _mediaFrameSourceGroupsStarted = true;
 
-            myText.text = "MediaFrameSourceGroups started...";
+            if (myText != null)
+            {
+                myText.text = "MediaFrameSourceGroups started...";
+            }
 
             // Initialize the Unity coordinate system
             // Get pointer to Unity's spatial coordinate system
@@ -321,7 +333,10 @@ namespace ArUcoDetectionHoloLensUnity
                 // myText.text = trackedIds;
             } else
             {
-                myText.text = "Began Streaming Sensor Frames. No Markers Found!";
+                if (myText != null)
+                {
+                    myText.text = "Began Streaming Sensor Frames. No Markers Found!";
+                }
             }
             // myText.text = "Began streaming sensor frames. Double tap to end streaming.";
             // Debug.Log("Tracking...");
@@ -351,7 +366,11 @@ namespace ArUcoDetectionHoloLensUnity
             // Bool to indicate closing
             _mediaFrameSourceGroupsStarted = false;
 
-            myText.text = "Stopped streaming sensor frames. Okay to exit app.";
+            if (myText != null)
+            {
+                myText.text = "Stopped streaming sensor frames. Okay to exit app.";
+
+            }
 #endif
         }
 

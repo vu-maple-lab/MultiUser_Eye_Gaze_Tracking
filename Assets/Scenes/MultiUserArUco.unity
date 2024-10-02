@@ -2353,7 +2353,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &700041883
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2565,7 +2565,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2f617a04cdb56548b9f978ee42eca20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  myText: {fileID: 705192944}
+  myText: {fileID: 0}
   deviceType: 1
   sensorTypePv: 0
   arUcoDictionaryName: 0
@@ -2618,7 +2618,7 @@ MonoBehaviour:
   screenDispObj: {fileID: 591448054}
   markers: []
   markerObjs: []
-  debugText: {fileID: 700041884}
+  debugText: {fileID: 0}
   screenCenterToMarkersDetermined: 0
   screenCenterToMarkersDetermineFrames: 100
   RSmoothFactor: 0.2
@@ -3704,7 +3704,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1230192566
 RectTransform:
   m_ObjectHideFlags: 0
