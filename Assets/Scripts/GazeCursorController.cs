@@ -124,10 +124,14 @@ public class GazeCursorController : MonoBehaviour
 
     public void saveTransformData(float px, float py, float pz, float rw, float rx, float ry, float rz, DateTime recordStartTime, string fileNamePrefix = "my_Eye_Gaze_Coordinate")
     {
-        long unixTime = ((DateTimeOffset)recordStartTime).ToUnixTimeMilliseconds();
-        string unixTime_String = unixTime.ToString();
+        // long startUnixTime = ((DateTimeOffset)recordStartTime).ToUnixTimeMilliseconds();
         string timeStamp = recordStartTime.ToLocalTime().ToString("yyyyMMdd_HHmmss");
+
+        DateTime curStartTime = DateTime.Now;
+        long curUnixTime = ((DateTimeOffset)curStartTime).ToUnixTimeMilliseconds();
+        string curUnixTimeString = curUnixTime.ToString();
         
+
         if (isRecording)
         {
             string filepath_in_function2 = Application.persistentDataPath + "/" + fileNamePrefix + "_" + timeStamp + "_" + recordingTrialCount + ".csv";
@@ -137,7 +141,7 @@ public class GazeCursorController : MonoBehaviour
             {
                 using (System.IO.StreamWriter file = new System.IO.StreamWriter(@filepath_in_function2, true))
                 {
-                    file.WriteLine(px + "," + py + "," + pz + "," + rw + "," + rx + "," + ry + "," + rz + "," + timeStamp + "," + unixTime_String);
+                    file.WriteLine(px + "," + py + "," + pz + "," + rw + "," + rx + "," + ry + "," + rz + "," + timeStamp + "," + curUnixTimeString);
                 }
             }
             catch (Exception ex)
