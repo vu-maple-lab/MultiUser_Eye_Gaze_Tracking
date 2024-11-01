@@ -3,8 +3,13 @@ using Photon.Pun;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using TMPro;
 using UnityEngine;
+
+/* 
+ * Also In Charge of General Frame Rate settings.
+ */
 
 public class GazeCursorController : MonoBehaviour
 {
@@ -25,12 +30,19 @@ public class GazeCursorController : MonoBehaviour
     private GameObject myPhotoViewObj = null;
     [HideInInspector] public bool isRecording;
     [HideInInspector] public int recordingTrialCount;
+    private List<GameObject> recordingGameObjs = null;
 
-    private DateTime curStartTime;
+    private DateTime curRecordStartTime;
+
+    private StreamWriter myGazeWriter = null;
+    private StreamWriter otherGazeWriter = null;
+    private StreamWriter screenPosWriter = null;
 
     // Start is called before the first frame update
     void Start()
     {
+        Time.fixedDeltaTime = 0.016666667f;
+        // Application.targetFrameRate = -1;
         cursorScaleGradient = cursorScaleMax - cursorScaleMin;
         float curScaleValue = (1 - cursorScaleMin) / cursorScaleGradient;
         slider.GetComponent<PinchSlider>().SliderValue = curScaleValue;
@@ -45,10 +57,11 @@ public class GazeCursorController : MonoBehaviour
         {
             buttonTMP = recordButton.transform.Find("IconAndText").Find("TextMeshPro").gameObject;
         }
+        recordingGameObjs = new List<GameObject> { myPhotoViewObj, otherPhotoViewObj, screenObj };
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
 
         // Retrieve (both) photonViews in the scene
@@ -79,15 +92,20 @@ public class GazeCursorController : MonoBehaviour
             // My Gaze, local to screen
             // Other's Gaze, local to screen
             // My Screen Position
+            // saveAllTransformData(recordingGameObjs, curStartTime);
+
+            DateTime curTime = DateTime.Now;
             saveTransformData(
-                myPhotoViewObj.transform.localPosition.x, 
-                myPhotoViewObj.transform.localPosition.y, 
+                myPhotoViewObj.transform.localPosition.x,
+                myPhotoViewObj.transform.localPosition.y,
                 myPhotoViewObj.transform.localPosition.z,
                 myPhotoViewObj.transform.localRotation.w,
                 myPhotoViewObj.transform.localRotation.x,
                 myPhotoViewObj.transform.localRotation.y,
                 myPhotoViewObj.transform.localRotation.z,
-                curStartTime,
+                curRecordStartTime,
+                curTime,
+                ref myGazeWriter,
                 "my_Eye_Gaze_Transforms"
                 );
             if (otherPhotoViewObj != null)
@@ -100,7 +118,9 @@ public class GazeCursorController : MonoBehaviour
                     otherPhotoViewObj.transform.localRotation.x,
                     otherPhotoViewObj.transform.localRotation.y,
                     otherPhotoViewObj.transform.localRotation.z,
-                    curStartTime,
+                    curRecordStartTime,
+                    curTime,
+                    ref otherGazeWriter,
                     "other_Eye_Gaze_Transforms"
                 );
             }
@@ -115,37 +135,79 @@ public class GazeCursorController : MonoBehaviour
                     screenObj.transform.localRotation.x,
                     screenObj.transform.localRotation.y,
                     screenObj.transform.localRotation.z,
-                    curStartTime,
+                    curRecordStartTime,
+                    curTime,
+                    ref screenPosWriter,
                     "screen_Track_Transforms"
                 );
             }
         }
     }
 
-    public void saveTransformData(float px, float py, float pz, float rw, float rx, float ry, float rz, DateTime recordStartTime, string fileNamePrefix = "my_Eye_Gaze_Coordinate")
+    // Note used; Don't Use.
+    public void saveAllTransformData(List<GameObject> gameObjs, DateTime recordStartTime, string fileNamePrefix = "combined_track_coordinate")
+    {
+        if (!isRecording)
+        {
+            return;
+        }
+        string timeStamp = recordStartTime.ToLocalTime().ToString("yyyyMMdd_HHmmss");
+
+        DateTime curTime = DateTime.Now;
+        long curUnixTime = ((DateTimeOffset)curTime).ToUnixTimeMilliseconds();
+        string curUnixTimeString = curUnixTime.ToString();
+
+        string filepath_in_function2 = Application.persistentDataPath + "/" + fileNamePrefix + "_" + timeStamp + "_" + recordingTrialCount + ".csv";
+        string curLine = "";
+        foreach (GameObject obj in gameObjs)
+        {
+            if (obj != null)
+            {
+                Transform T = obj.transform;
+                curLine += T.localPosition.x + "," + T.localPosition.y + "," + T.localPosition.z + "," + T.localRotation.w + "," + T.localRotation.x + "," + T.localRotation.y + "," + T.localRotation.z + ",";
+            }
+            else
+            {
+                curLine += -1 + "," + -1 + "," + -1 + "," + -1 + "," + -1 + "," + -1 + "," + -1 + ",";
+            }
+        }
+        curLine += timeStamp + "," + curUnixTimeString;
+        try
+        {
+            using (System.IO.StreamWriter file = new System.IO.StreamWriter(@filepath_in_function2, true))
+            {
+                file.WriteLine(curLine);
+            }
+        }
+        catch (Exception ex)
+        {
+            throw new ApplicationException("Failed to save:  ", ex);
+        }
+    }
+
+    public void saveTransformData(float px, float py, float pz, float rw, float rx, float ry, float rz, DateTime recordStartTime, DateTime curTime, ref StreamWriter writer, string fileNamePrefix = "my_Eye_Gaze_Coordinate")
     {
         // long startUnixTime = ((DateTimeOffset)recordStartTime).ToUnixTimeMilliseconds();
         string timeStamp = recordStartTime.ToLocalTime().ToString("yyyyMMdd_HHmmss");
 
-        DateTime curStartTime = DateTime.Now;
-        long curUnixTime = ((DateTimeOffset)curStartTime).ToUnixTimeMilliseconds();
+        long curUnixTime = ((DateTimeOffset)curTime).ToUnixTimeMilliseconds();
         string curUnixTimeString = curUnixTime.ToString();
         
 
         if (isRecording)
         {
-            string filepath_in_function2 = Application.persistentDataPath + "/" + fileNamePrefix + "_" + timeStamp + "_" + recordingTrialCount + ".csv";
             //Debug.Log("filepath" + filepath_in_function2);
-            //string test_filePath = "U:/Users/yizhou.li@vanderbilt.edu/AppData/Local/Packages/Eyerecorder_pzq3xp76mxafg/LocalState/position_Cursor_IO.csv";
+            //string test_filePath = "U:/Users/yizhou.li@vanderbilt.edu/AppData/Local/Packages/Eyerecorder_pzq3xp76mxafg/LocalState/position_Cursor_IO.csv"; 
             try
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(@filepath_in_function2, true))
-                {
-                    file.WriteLine(px + "," + py + "," + pz + "," + rw + "," + rx + "," + ry + "," + rz + "," + timeStamp + "," + curUnixTimeString);
-                }
+                string curFilePath = Application.persistentDataPath + "/" + fileNamePrefix + "_" + timeStamp + "_" + recordingTrialCount + ".csv";
+                writer ??= new System.IO.StreamWriter(@curFilePath, true);
+                writer.WriteLine(px + "," + py + "," + pz + "," + rw + "," + rx + "," + ry + "," + rz + "," + timeStamp + "," + curUnixTimeString);
             }
+
             catch (Exception ex)
             {
+                writer?.Dispose();
                 throw new ApplicationException("Failed to save:  ", ex);
             }
         }
@@ -247,14 +309,29 @@ public class GazeCursorController : MonoBehaviour
             {
                 buttonTMP.GetComponent<TextMeshPro>().text = "Record Gaze Data";
             }
-        } else
+            myGazeWriter?.Dispose();
+            otherGazeWriter?.Dispose();
+            screenPosWriter?.Dispose();
+        }
+        else
         {
             isRecording = true;
             if (buttonTMP != null)
             {
                 buttonTMP.GetComponent<TextMeshPro>().text = "Stop Recording Data";
             }
-            curStartTime = DateTime.Now;
+            myGazeWriter?.Dispose();
+            otherGazeWriter?.Dispose();
+            screenPosWriter?.Dispose();
+
+            curRecordStartTime = DateTime.Now;
+            string timeStamp = curRecordStartTime.ToLocalTime().ToString("yyyyMMdd_HHmmss");
+            string myGazeFilePath = Application.persistentDataPath + "/" + "my_Eye_Gaze_Transforms" + "_" + timeStamp + "_" + recordingTrialCount + ".csv";
+            string otherGazeFilePath = Application.persistentDataPath + "/" + "other_Eye_Gaze_Transforms" + "_" + timeStamp + "_" + recordingTrialCount + ".csv";
+            string screenPoseFilePath = Application.persistentDataPath + "/" + "screen_Track_Transforms" + "_" + timeStamp + "_" + recordingTrialCount + ".csv";
+            myGazeWriter = new System.IO.StreamWriter(myGazeFilePath, true);
+            otherGazeWriter = new System.IO.StreamWriter(otherGazeFilePath, true);
+            screenPosWriter = new System.IO.StreamWriter(screenPoseFilePath, true);
         }
     }
 }

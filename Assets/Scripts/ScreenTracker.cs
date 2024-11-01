@@ -7,9 +7,11 @@ using UnityEngine;
 using UnityEditor;
 using UnityEngine.UI;
 using Unity.VisualScripting.Antlr3.Runtime;
+using ArUcoDetectionHoloLensUnity;
 
 public class ScreenTracker : MonoBehaviour
 {
+    public GameObject arucoMarkerDetectorObj = default;
     public GameObject bottomLeftMarker = default;
     public GameObject bottomRightMarker = default;
     public GameObject topLeftMarker = default;
@@ -53,13 +55,13 @@ public class ScreenTracker : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         
     }
 
-    private void FixedUpdate()
-    {
+    private void Update()
+    { // Using Update() instead of fixedUpdate, because arucoMarkerDetection also uses it.
         _frameCount++;
 
         if (_frameCount == skipFrames)
@@ -224,8 +226,8 @@ public class ScreenTracker : MonoBehaviour
         }
         */
         // Bottom Left, Bottom Right, Top Left, Top Right
-        screenWidth = (Mathf.Abs(BRScreenPos.x - BLScreenPos.x) + Mathf.Abs(TRScreenPos.x - TLScreenPos.x)) / 2;
-        screenHeight = (Mathf.Abs(TLScreenPos.y - BLScreenPos.y) + Mathf.Abs(TRScreenPos.y - BRScreenPos.y)) / 2;
+        screenWidth = (Mathf.Abs(BRScreenPos.x - BLScreenPos.x) + Mathf.Abs(TRScreenPos.x - TLScreenPos.x)) / 2 + arucoMarkerDetectorObj.GetComponent<ArUcoMarkerDetection>().markerSize * 1.5f;
+        screenHeight = (Mathf.Abs(TLScreenPos.y - BLScreenPos.y) + Mathf.Abs(TRScreenPos.y - BRScreenPos.y)) / 2 + arucoMarkerDetectorObj.GetComponent<ArUcoMarkerDetection>().markerSize * 1.5f;
         // debugText.text += string.Format("\nWidth {0}, Height {1}", screenWidth, screenHeight);
     }
 
