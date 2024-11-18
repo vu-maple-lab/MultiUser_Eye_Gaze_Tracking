@@ -92,7 +92,6 @@ public class GazeCursorController : MonoBehaviour
             // My Gaze, local to screen
             // Other's Gaze, local to screen
             // My Screen Position
-            // saveAllTransformData(recordingGameObjs, curStartTime);
 
             DateTime curTime = DateTime.Now;
             saveTransformData(
@@ -144,7 +143,7 @@ public class GazeCursorController : MonoBehaviour
         }
     }
 
-    // Note used; Don't Use.
+    // Not used; Don't Use; This function will create a file descriptor each time it is called, which is hyper-inefficient
     public void saveAllTransformData(List<GameObject> gameObjs, DateTime recordStartTime, string fileNamePrefix = "combined_track_coordinate")
     {
         if (!isRecording)
@@ -239,7 +238,8 @@ public class GazeCursorController : MonoBehaviour
         Debug.Log("Toggled Other Cursor's Visibility to " + isOtherCursorVisible.ToString());
     }
 
-    public void onCycleMyCursorStyle()
+
+    private void updateMyCursorStyle(int newIdx)
     {
         if (myPhotoViewObj == null)
         {
@@ -247,13 +247,18 @@ public class GazeCursorController : MonoBehaviour
         }
 
         myPhotoViewObj.transform.GetChild(myCursorStyle).gameObject.GetComponent<Renderer>().enabled = false;
-        myCursorStyle = (myCursorStyle + 1) % myPhotoViewObj.transform.childCount;
+        myCursorStyle = newIdx % myPhotoViewObj.transform.childCount;
         myPhotoViewObj.transform.GetChild(myCursorStyle).gameObject.GetComponent<Renderer>().enabled = true;
 
-        Debug.Log("Cycled My Cursor's Visibility to " + myCursorStyle.ToString());
+        Debug.Log("Updated My Cursor's Visibility to " + myCursorStyle.ToString());
     }
 
-    public void onCycleOtherCursorStyle()
+    public void onCycleMyCursorStyle()
+    {
+        updateMyCursorStyle((myCursorStyle + 1) % myPhotoViewObj.transform.childCount);
+    }
+
+    private void updateOtherCursorStyle(int newIdx)
     {
         if (otherPhotoViewObj == null)
         {
@@ -261,16 +266,25 @@ public class GazeCursorController : MonoBehaviour
         }
 
         otherPhotoViewObj.transform.GetChild(otherCursorStyle).gameObject.GetComponent<Renderer>().enabled = false;
-        otherCursorStyle = (otherCursorStyle + 1) % otherPhotoViewObj.transform.childCount;
+        otherCursorStyle = newIdx % otherPhotoViewObj.transform.childCount;
         otherPhotoViewObj.transform.GetChild(otherCursorStyle).gameObject.GetComponent<Renderer>().enabled = true;
 
-        Debug.Log("Cycled Other Cursor's Visibility to " + otherCursorStyle.ToString());
+        Debug.Log("Updated Other Cursor's Visibility to " + myCursorStyle.ToString());
+    }
 
+    public void onCycleOtherCursorStyle()
+    {
+        updateOtherCursorStyle((otherCursorStyle + 1) % otherPhotoViewObj.transform.childCount);
     }
 
     public void onUpdateCursorScale()
     {
         float scale = slider.GetComponent<PinchSlider>().SliderValue;
+        setCursorScale(scale);
+    }
+
+    private void setCursorScale(float scale)
+    {
         float convertedScale = scale * cursorScaleGradient + cursorScaleMin;
         if (myPhotoViewObj != null)
         {
@@ -287,51 +301,79 @@ public class GazeCursorController : MonoBehaviour
     {
         if (curVisibility == true)
         {
-            for (int childIdx = 0; childIdx < cursorObj.gameObject.transform.childCount; childIdx++)
-            {
-                cursorObj.transform.GetChild(childIdx).gameObject.GetComponent<Renderer>().enabled = false;
-            }
+            hideCursor(cursorObj);
         }
         else
         {
-            cursorObj.transform.GetChild(visibleChildIdx).gameObject.GetComponent<Renderer>().enabled = true;
+            showCursor(cursorObj, visibleChildIdx);
         }
 
+    }
+
+    private void hideCursor(GameObject cursorObj)
+    {
+        for (int childIdx = 0; childIdx < cursorObj.gameObject.transform.childCount; childIdx++)
+        {
+            cursorObj.transform.GetChild(childIdx).gameObject.GetComponent<Renderer>().enabled = false;
+        }
+    }
+
+    private void showCursor(GameObject cursorObj, int visibleChildIdx)
+    {
+        cursorObj.transform.GetChild(visibleChildIdx).gameObject.GetComponent<Renderer>().enabled = true;
+    }
+
+    private void startRecording()
+    {
+        if (isRecording)
+        {
+            return;
+        }
+        isRecording = true;
+        if (buttonTMP != null)
+        {
+            buttonTMP.GetComponent<TextMeshPro>().text = "Stop Recording Data";
+        }
+        myGazeWriter?.Dispose();
+        otherGazeWriter?.Dispose();
+        screenPosWriter?.Dispose();
+
+        curRecordStartTime = DateTime.Now;
+        string timeStamp = curRecordStartTime.ToLocalTime().ToString("yyyyMMdd_HHmmss");
+        string myGazeFilePath = Application.persistentDataPath + "/" + "my_Eye_Gaze_Transforms" + "_" + timeStamp + "_" + recordingTrialCount + ".csv";
+        string otherGazeFilePath = Application.persistentDataPath + "/" + "other_Eye_Gaze_Transforms" + "_" + timeStamp + "_" + recordingTrialCount + ".csv";
+        string screenPoseFilePath = Application.persistentDataPath + "/" + "screen_Track_Transforms" + "_" + timeStamp + "_" + recordingTrialCount + ".csv";
+        myGazeWriter = new System.IO.StreamWriter(myGazeFilePath, true);
+        otherGazeWriter = new System.IO.StreamWriter(otherGazeFilePath, true);
+        screenPosWriter = new System.IO.StreamWriter(screenPoseFilePath, true);
+    }
+
+    private void stopRecording()
+    {
+        if (!isRecording)
+        {
+            return;
+        }
+        recordingTrialCount++;
+        isRecording = false;
+        if (buttonTMP != null)
+        {
+            buttonTMP.GetComponent<TextMeshPro>().text = "Record Gaze Data";
+        }
+        myGazeWriter?.Dispose();
+        otherGazeWriter?.Dispose();
+        screenPosWriter?.Dispose();
     }
 
     public void onToggleGazeRecording()
     {
         if (isRecording)
         {
-            recordingTrialCount++;
-            isRecording = false;
-            if (buttonTMP != null)
-            {
-                buttonTMP.GetComponent<TextMeshPro>().text = "Record Gaze Data";
-            }
-            myGazeWriter?.Dispose();
-            otherGazeWriter?.Dispose();
-            screenPosWriter?.Dispose();
+            stopRecording();
         }
         else
         {
-            isRecording = true;
-            if (buttonTMP != null)
-            {
-                buttonTMP.GetComponent<TextMeshPro>().text = "Stop Recording Data";
-            }
-            myGazeWriter?.Dispose();
-            otherGazeWriter?.Dispose();
-            screenPosWriter?.Dispose();
-
-            curRecordStartTime = DateTime.Now;
-            string timeStamp = curRecordStartTime.ToLocalTime().ToString("yyyyMMdd_HHmmss");
-            string myGazeFilePath = Application.persistentDataPath + "/" + "my_Eye_Gaze_Transforms" + "_" + timeStamp + "_" + recordingTrialCount + ".csv";
-            string otherGazeFilePath = Application.persistentDataPath + "/" + "other_Eye_Gaze_Transforms" + "_" + timeStamp + "_" + recordingTrialCount + ".csv";
-            string screenPoseFilePath = Application.persistentDataPath + "/" + "screen_Track_Transforms" + "_" + timeStamp + "_" + recordingTrialCount + ".csv";
-            myGazeWriter = new System.IO.StreamWriter(myGazeFilePath, true);
-            otherGazeWriter = new System.IO.StreamWriter(otherGazeFilePath, true);
-            screenPosWriter = new System.IO.StreamWriter(screenPoseFilePath, true);
+            startRecording();
         }
     }
 }
