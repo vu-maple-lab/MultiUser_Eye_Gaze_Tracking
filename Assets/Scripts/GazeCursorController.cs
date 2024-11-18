@@ -6,6 +6,10 @@ using System.Collections.Generic;
 using System.IO;
 using TMPro;
 using UnityEngine;
+using NetMQ;
+using NetMQ.Sockets;
+using System.Threading;
+using UnityEngine.Assertions;
 
 /* 
  * Also In Charge of General Frame Rate settings.
@@ -38,9 +42,15 @@ public class GazeCursorController : MonoBehaviour
     private StreamWriter otherGazeWriter = null;
     private StreamWriter screenPosWriter = null;
 
+    //private Thread listenerThread;
+    //private bool listenerRunning = true;
+    private SubscriberSocket subscriberSocket;
+
     // Start is called before the first frame update
     void Start()
     {
+        AsyncIO.ForceDotNet.Force();
+
         Time.fixedDeltaTime = 0.016666667f;
         // Application.targetFrameRate = -1;
         cursorScaleGradient = cursorScaleMax - cursorScaleMin;
@@ -58,11 +68,24 @@ public class GazeCursorController : MonoBehaviour
             buttonTMP = recordButton.transform.Find("IconAndText").Find("TextMeshPro").gameObject;
         }
         recordingGameObjs = new List<GameObject> { myPhotoViewObj, otherPhotoViewObj, screenObj };
+
+        //NetMQConfig.Linger = new TimeSpan(0, 0, 1);
+
+        //// InitializeSubscriber();
+        //subscriberSocket = new SubscriberSocket();
+        //subscriberSocket.Options.Linger = new TimeSpan(0, 0, 1);
+        //subscriberSocket.Connect("tcp://localhost:5555"); // Replace with the publisher's IP and port
+        //subscriberSocket.SubscribeToAnyTopic();
+        //Assert.IsNotNull(subscriberSocket);
+        //Debug.Log("Finished Settingup Socket");
+
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
+        //string message = subscriberSocket.ReceiveFrameString();
+        //ProcessMessage(message);
 
         // Retrieve (both) photonViews in the scene
         // Assumptions: 1. Only 2 photonViews are present. 2. One is my gaze, the other is the other's gaze.
@@ -142,6 +165,19 @@ public class GazeCursorController : MonoBehaviour
             }
         }
     }
+
+    //void ondisable()
+    //{
+    //    subscribersocket?.dispose();
+    //    netmqconfig.cleanup(false);
+    //}
+
+    //private void ondestroy()
+    //{
+
+    //    subscribersocket?.close();
+    //    netmqconfig.cleanup(false);
+    //}
 
     // Not used; Don't Use; This function will create a file descriptor each time it is called, which is hyper-inefficient
     public void saveAllTransformData(List<GameObject> gameObjs, DateTime recordStartTime, string fileNamePrefix = "combined_track_coordinate")
@@ -374,6 +410,83 @@ public class GazeCursorController : MonoBehaviour
         else
         {
             startRecording();
+        }
+    }
+
+
+    //private void InitializeSubscriber()
+    //{
+    //    listenerThread = new Thread(ListenerLoop);
+    //    listenerThread.IsBackground = true;
+    //    listenerThread.Start();
+    //}
+
+
+    //private void ListenerLoop()
+    //{
+    //    AsyncIO.ForceDotNet.Force(); // Ensure proper cleanup of sockets
+    //    using (subscriberSocket = new SubscriberSocket())
+    //    {
+    //        subscriberSocket.Connect("tcp://localhost:5555"); // Replace with the publisher's IP and port
+    //        subscriberSocket.SubscribeToAnyTopic();
+
+    //        while (listenerRunning)
+    //        {
+    //            try
+    //            {
+    //                string message = subscriberSocket.ReceiveFrameString();
+    //                ProcessMessage(message);
+    //            }
+    //            catch (NetMQException)
+    //            {
+    //                // Handle socket closure or other issues gracefully
+    //            }
+    //        }
+    //    }
+    //    NetMQConfig.Cleanup();
+    //}
+
+    private void ProcessMessage(string message)
+    {
+        Debug.Log($"Received message: {message}");
+
+        // Parse topic and payload
+        string[] parts = message.Split(':');
+        if (parts.Length < 2) return; // Ignore invalid messages
+
+        string topic = parts[0].Trim();
+        string payload = parts[1].Trim();
+
+        switch (topic)
+        {
+            case "DataCollection":
+                if(payload == "StartRecording")
+                {
+                    startRecording();
+                }
+                if (payload == "StopRecording")
+                {
+                    stopRecording();
+                }
+                break;
+            case "CursorVisual/User1":
+                if (int.TryParse(payload, out int user1Style))
+                    updateMyCursorStyle(user1Style);
+                break;
+
+            case "CursorVisual/User2":
+                if (int.TryParse(payload, out int user2Style))
+                    updateOtherCursorStyle(user2Style);
+                break;
+
+            case "CursorSize":
+                if (float.TryParse(payload, out float cursorSize))
+                    setCursorScale(cursorSize);
+                break;
+
+            default:
+                Debug.LogWarning($"Unknown topic: {topic}");
+                break;
         }
     }
 }

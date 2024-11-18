@@ -796,6 +796,19 @@ MonoBehaviour:
   screenObj: {fileID: 1509323843}
   isRecording: 0
   recordingTrialCount: 0
+--- !u!114 &62894547
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 53724542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7459371f229c495419de7408977c846d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _port: 5557
 --- !u!1 &63870930
 GameObject:
   m_ObjectHideFlags: 0
