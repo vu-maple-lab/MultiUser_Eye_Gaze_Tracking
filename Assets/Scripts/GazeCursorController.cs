@@ -166,6 +166,18 @@ public class GazeCursorController : MonoBehaviour
         }
     }
 
+    public string getMyName()
+    {
+        if (myPhotoViewObj == null)
+        {
+            return "User1";
+        }
+        else
+        {
+            return myPhotoViewObj.name;
+        }
+    }
+
     //void ondisable()
     //{
     //    subscribersocket?.dispose();
@@ -248,6 +260,45 @@ public class GazeCursorController : MonoBehaviour
         }
     }
 
+    public void hideMyCursor()
+    {
+        if (myPhotoViewObj == null)
+        {
+            return;
+        }
+        hideCursor(myPhotoViewObj);
+        isMyCursorVisible = false;
+    }
+
+    public void showMyCursor(int visibleChildIdx)
+    {
+        if (myPhotoViewObj == null)
+        {
+            return;
+        }
+        updateMyCursorStyle(visibleChildIdx);
+    }
+
+    public void hideOtherCursor()
+    {
+        if (otherPhotoViewObj == null)
+        {
+            return;
+        }
+        hideCursor(otherPhotoViewObj);
+        isOtherCursorVisible = false;
+    }
+
+    public void showOtherCursor(int visibleChildIdx)
+    {
+        if (otherPhotoViewObj == null)
+        {
+            return;
+        }
+        updateOtherCursorStyle(visibleChildIdx);
+    }
+
+
     public void onToggleMyCursorVisibility()
     {
         if (myPhotoViewObj == null)
@@ -275,16 +326,16 @@ public class GazeCursorController : MonoBehaviour
     }
 
 
-    private void updateMyCursorStyle(int newIdx)
+    public void updateMyCursorStyle(int newIdx)
     {
         if (myPhotoViewObj == null)
         {
             return;
         }
 
-        myPhotoViewObj.transform.GetChild(myCursorStyle).gameObject.GetComponent<Renderer>().enabled = false;
+        isMyCursorVisible = true;
         myCursorStyle = newIdx % myPhotoViewObj.transform.childCount;
-        myPhotoViewObj.transform.GetChild(myCursorStyle).gameObject.GetComponent<Renderer>().enabled = true;
+        showCursorWReset(myPhotoViewObj, myCursorStyle);
 
         Debug.Log("Updated My Cursor's Visibility to " + myCursorStyle.ToString());
     }
@@ -294,16 +345,16 @@ public class GazeCursorController : MonoBehaviour
         updateMyCursorStyle((myCursorStyle + 1) % myPhotoViewObj.transform.childCount);
     }
 
-    private void updateOtherCursorStyle(int newIdx)
+    public void updateOtherCursorStyle(int newIdx)
     {
         if (otherPhotoViewObj == null)
         {
             return;
         }
-
-        otherPhotoViewObj.transform.GetChild(otherCursorStyle).gameObject.GetComponent<Renderer>().enabled = false;
+        
+        isOtherCursorVisible = true;
         otherCursorStyle = newIdx % otherPhotoViewObj.transform.childCount;
-        otherPhotoViewObj.transform.GetChild(otherCursorStyle).gameObject.GetComponent<Renderer>().enabled = true;
+        showCursorWReset(otherPhotoViewObj, otherCursorStyle);
 
         Debug.Log("Updated Other Cursor's Visibility to " + myCursorStyle.ToString());
     }
@@ -313,13 +364,7 @@ public class GazeCursorController : MonoBehaviour
         updateOtherCursorStyle((otherCursorStyle + 1) % otherPhotoViewObj.transform.childCount);
     }
 
-    public void onUpdateCursorScale()
-    {
-        float scale = slider.GetComponent<PinchSlider>().SliderValue;
-        setCursorScale(scale);
-    }
-
-    private void setCursorScale(float scale)
+    public void setCursorScale(float scale)
     {
         float convertedScale = scale * cursorScaleGradient + cursorScaleMin;
         if (myPhotoViewObj != null)
@@ -341,9 +386,8 @@ public class GazeCursorController : MonoBehaviour
         }
         else
         {
-            showCursor(cursorObj, visibleChildIdx);
+            showCursorWReset(cursorObj, visibleChildIdx);
         }
-
     }
 
     private void hideCursor(GameObject cursorObj)
@@ -354,12 +398,24 @@ public class GazeCursorController : MonoBehaviour
         }
     }
 
-    private void showCursor(GameObject cursorObj, int visibleChildIdx)
+    private void showCursorNoReset(GameObject cursorObj, int visibleChildIdx)
     {
         cursorObj.transform.GetChild(visibleChildIdx).gameObject.GetComponent<Renderer>().enabled = true;
     }
 
-    private void startRecording()
+    public void onUpdateCursorScale()
+    {
+        float scale = slider.GetComponent<PinchSlider>().SliderValue;
+        setCursorScale(scale);
+    }
+
+    private void showCursorWReset(GameObject cursorObj, int newIdx)
+    {
+        hideCursor(cursorObj);
+        showCursorNoReset(cursorObj, newIdx);
+    }
+
+    public void startRecording()
     {
         if (isRecording)
         {
@@ -384,7 +440,7 @@ public class GazeCursorController : MonoBehaviour
         screenPosWriter = new System.IO.StreamWriter(screenPoseFilePath, true);
     }
 
-    private void stopRecording()
+    public void stopRecording()
     {
         if (!isRecording)
         {

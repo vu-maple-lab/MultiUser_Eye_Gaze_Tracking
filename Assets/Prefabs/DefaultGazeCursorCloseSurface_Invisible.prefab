@@ -49,7 +49,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4000013316072862
 Transform:
   m_ObjectHideFlags: 0
@@ -107,7 +107,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9296b71443954db1b4571935a43e5266, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  radius: 0.15
+  radius: 0.146
   color: {r: 0.24528301, g: 0.24528301, b: 0.24528301, a: 1}
 --- !u!1 &1000012072213228
 GameObject:
@@ -120,7 +120,7 @@ GameObject:
   - component: {fileID: 4000011792100794}
   - component: {fileID: 114611684728110934}
   m_Layer: 2
-  m_Name: DefaultGazeCursorCloseSurface
+  m_Name: DefaultGazeCursorCloseSurface_Invisible
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

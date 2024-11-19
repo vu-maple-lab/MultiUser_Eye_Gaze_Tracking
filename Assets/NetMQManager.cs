@@ -2,17 +2,24 @@ using UnityEngine;
 using NetMQ;
 using NetMQ.Sockets;
 using System.Threading;
+using System.Collections.Concurrent;
+using static UnityEngine.InputSystem.InputRemoting;
 
-public class NetMQTest : MonoBehaviour
+public class NetMQManager : MonoBehaviour
 {
+    private GazeCursorController gazeCursorController;
     private Thread listenerThread;
     private bool listenerRunning = true;
     private SubscriberSocket subscriberSocket;
+
+    private ConcurrentQueue<string> messageQueue = new ConcurrentQueue<string>();
+
 
     // Start is called before the first frame update
     void Start()
     {
         InitializeSubscriber();
+        gazeCursorController = gameObject.GetComponent<GazeCursorController>();
     }
 
     private void InitializeSubscriber()
@@ -22,13 +29,21 @@ public class NetMQTest : MonoBehaviour
         listenerThread.Start();
     }
 
+    private void Update()
+    {
+        while (messageQueue.TryDequeue(out string message))
+        {
+            ProcessMessage(message);
+        }
+    }
+
     private void ListenerLoop()
     {
         AsyncIO.ForceDotNet.Force(); // Ensure proper cleanup of sockets
         using (subscriberSocket = new SubscriberSocket())
         {
             subscriberSocket.Connect("tcp://localhost:7788"); // Replace with the publisher's IP and port
-            subscriberSocket.SubscribeToAnyTopic();
+            subscriberSocket.SubscribeToAnyTopic(); // Doing manual subscribing for now...
 
             while (listenerRunning)
             {
@@ -40,7 +55,7 @@ public class NetMQTest : MonoBehaviour
                     if (subscriberSocket.TryReceiveFrameString(out string recv))
                     {
                         print($"server recv: {recv}");
-
+                        messageQueue.Enqueue(recv);
                         //_server.sendframe("world");
                     }
                     //ProcessMessage(message);
@@ -65,29 +80,48 @@ public class NetMQTest : MonoBehaviour
         string topic = parts[0].Trim();
         string payload = parts[1].Trim();
 
-        switch (topic)
+        string[] subtopics = topic.Split("/");
+        if (subtopics.Length < 1) return;
+
+        string myName = $"{gazeCursorController.getMyName()}";
+        if (!(subtopics[0].StartsWith(myName) || subtopics.Length == 1)) return;
+
+        switch (subtopics[subtopics.Length-1])
         {
             case "DataCollection":
                 HandleDataCollectionSignal(payload);
                 break;
 
-            case "CursorVisual/User1":
+            case "MyCursorVisual":
                 if (int.TryParse(payload, out int user1Style))
-                    updateMyCursorStyle(user1Style);
+                {
+                    if (user1Style == 0)
+                    {
+                        gazeCursorController.hideMyCursor();
+                    } else
+                    {
+                        gazeCursorController.updateMyCursorStyle(user1Style-1);
+                    }
+                }
                 break;
-
-            case "CursorVisual/User2":
+            case "OtherCursorVisual":
                 if (int.TryParse(payload, out int user2Style))
-                    updateOtherCursorStyle(user2Style);
+                {
+                    if (user2Style == 0)
+                    {
+                        gazeCursorController.hideOtherCursor();
+                    } else
+                    {
+                        gazeCursorController.updateOtherCursorStyle(user2Style-1);
+                    }
+                }
                 break;
-
             case "CursorSize":
                 if (float.TryParse(payload, out float cursorSize))
-                    setCursorScale(cursorSize);
+                    gazeCursorController.setCursorScale(cursorSize);
                 break;
-
             default:
-                Debug.LogWarning($"Unknown topic: {topic}");
+                Debug.LogWarning($"Unknown topic: {subtopics[subtopics.Length - 1]}");
                 break;
         }
     }
@@ -97,11 +131,11 @@ public class NetMQTest : MonoBehaviour
         switch (signal)
         {
             case "Start Recording":
-                startRecording();
+                gazeCursorController.startRecording();
                 break;
 
             case "Stop Recording":
-                stopRecording();
+                gazeCursorController.stopRecording();
                 break;
 
             default:
