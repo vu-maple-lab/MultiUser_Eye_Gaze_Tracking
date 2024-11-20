@@ -42,7 +42,7 @@ public class NetMQManager : MonoBehaviour
         AsyncIO.ForceDotNet.Force(); // Ensure proper cleanup of sockets
         using (subscriberSocket = new SubscriberSocket())
         {
-            subscriberSocket.Connect("tcp://localhost:7788"); // Replace with the publisher's IP and port
+            subscriberSocket.Connect("tcp://192.168.0.10:7788"); // Replace with the publisher's IP and port
             subscriberSocket.SubscribeToAnyTopic(); // Doing manual subscribing for now...
 
             while (listenerRunning)
