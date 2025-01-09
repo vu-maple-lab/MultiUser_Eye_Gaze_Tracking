@@ -73,7 +73,7 @@ public class ScreenTracker : MonoBehaviour
                 Debug.Log("All markers visible, determining marker to screen T");
                 if (debugText != null)
                 {
-                    debugText.text = string.Format("Calibrating the screen transform. Keep the screen in view, wait until the virtual screen frame disappears.");
+                    debugText.text = string.Format("Registering Screen. Keep the screen in view until the virtual screen frame disappears.");
                 }
                 
 
@@ -117,7 +117,7 @@ public class ScreenTracker : MonoBehaviour
                     // debugText.text = string.Format("Marker to Screen T determined, now normal tracking...\n{0}\n{1}", screenObj.transform.position, screenObj.transform.eulerAngles);
                     if (debugText != null)
                     {
-                        debugText.text = string.Format("");
+                        debugText.text = string.Format("Screen Registered.");
                     }
                 }
             }
