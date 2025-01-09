@@ -52,6 +52,7 @@ public class ScreenTracker : MonoBehaviour
         {
             markers.Add(markerObj.GetComponent<ArucoMarker>());
         }
+
     }
 
     // Update is called once per frame
@@ -72,7 +73,7 @@ public class ScreenTracker : MonoBehaviour
                 Debug.Log("All markers visible, determining marker to screen T");
                 if (debugText != null)
                 {
-                    debugText.text = string.Format("Calibrating the screen transform. Keep the screen in view, wait until the virtual screen frame turns green.");
+                    debugText.text = string.Format("Calibrating the screen transform. Keep the screen in view, wait until the virtual screen frame disappears.");
                 }
                 
 
@@ -107,7 +108,8 @@ public class ScreenTracker : MonoBehaviour
                         Debug.Log("Updating Frame Materials");
                         for (int i = 0; i < screenFrame.transform.childCount; i++)
                         {
-                            screenFrame.transform.GetChild(i).gameObject.GetComponent<Renderer>().material = screenMaterialGreen;
+                            //screenFrame.transform.GetChild(i).gameObject.GetComponent<Renderer>().material = screenMaterialGreen;
+                            screenFrame.transform.GetChild(i).gameObject.GetComponent<Renderer>().enabled = false;
                         }
                     }
                 

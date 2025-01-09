@@ -18,6 +18,7 @@ public class NetMQManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Debug.Log("Starting ZMQ...");
         InitializeSubscriber();
         gazeCursorController = gameObject.GetComponent<GazeCursorController>();
     }
@@ -178,7 +179,10 @@ public class NetMQManager : MonoBehaviour
     private void OnDestroy()
     {
         listenerRunning = false;
-        listenerThread.Join();
+        if (listenerThread != null)
+        {
+            listenerThread.Join();
+        }
 
         subscriberSocket?.Close();
         NetMQConfig.Cleanup(false);
@@ -187,8 +191,10 @@ public class NetMQManager : MonoBehaviour
     private void OnDisable()
     {
         listenerRunning = false;
-        listenerThread.Join();
-
+        if (listenerThread != null)
+        {
+            listenerThread.Join();
+        }
         subscriberSocket?.Close();
         NetMQConfig.Cleanup(false);
     }

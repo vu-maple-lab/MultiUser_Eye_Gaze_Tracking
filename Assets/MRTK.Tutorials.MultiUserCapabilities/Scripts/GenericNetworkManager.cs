@@ -32,6 +32,7 @@ namespace MRTK.Tutorials.MultiUserCapabilities
 
         private void Start()
         {
+            Debug.Log("Starting Photon Network Connection...");
             ConnectToNetwork();
         }
 

@@ -23,7 +23,7 @@ MonoBehaviour:
   trianglesPerCubicMeter: 0
   recalculateNormals: 1
   displayOption: 0
-  visibleMaterial: {fileID: 2100000, guid: 47c3d3b0d8143e3489351498fceed55d, type: 2}
+  visibleMaterial: {fileID: 0}
   occlusionMaterial: {fileID: 0}
   physicsMaterial: {fileID: 0}
   runtimeSpatialMeshPrefab: {fileID: 0}

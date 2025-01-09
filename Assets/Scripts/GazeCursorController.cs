@@ -12,7 +12,9 @@ using System.Threading;
 using UnityEngine.Assertions;
 
 /* 
+ * In charge of the visualization styling control of the cursors, in conjunction with NetMQ Manager and the Control Menu.
  * Also In Charge of General Frame Rate settings.
+ * NOTE: Actual cursor position control is achievved via `GenericNetSync.cs` of the player prefab at `Assets/MRTK.Tutorials.MultiUserCapabilities/Resources/PhotonUserGaze.prefab`
  */
 
 public class GazeCursorController : MonoBehaviour
@@ -23,6 +25,7 @@ public class GazeCursorController : MonoBehaviour
     [SerializeField] public Material myMaterial;
     [SerializeField] public GameObject recordButton = null;
     [SerializeField] public GameObject screenObj = null;
+    [SerializeField] public GameObject controlMenu = null;
     private float cursorScaleGradient;
     private bool isOtherCursorVisible = true;
     private int otherCursorStyle = 0;
@@ -79,6 +82,7 @@ public class GazeCursorController : MonoBehaviour
         //Assert.IsNotNull(subscriberSocket);
         //Debug.Log("Finished Settingup Socket");
 
+        hideMenu();
     }
 
     // Update is called once per frame
@@ -342,6 +346,10 @@ public class GazeCursorController : MonoBehaviour
 
     public void onCycleMyCursorStyle()
     {
+        if (myPhotoViewObj == null)
+        {
+            return;
+        }
         updateMyCursorStyle((myCursorStyle + 1) % myPhotoViewObj.transform.childCount);
     }
 
@@ -361,6 +369,10 @@ public class GazeCursorController : MonoBehaviour
 
     public void onCycleOtherCursorStyle()
     {
+        if (otherPhotoViewObj == null)
+        {
+            return;
+        }
         updateOtherCursorStyle((otherCursorStyle + 1) % otherPhotoViewObj.transform.childCount);
     }
 
@@ -543,6 +555,31 @@ public class GazeCursorController : MonoBehaviour
             default:
                 Debug.LogWarning($"Unknown topic: {topic}");
                 break;
+        }
+    }
+
+    public void hideMenu()
+    {
+        if (controlMenu != null)
+        {
+            controlMenu.SetActive(false);
+            Debug.Log("Menu Hidden!");
+        } else
+        {
+            Debug.Log("Menu is Null, can't be hidden!");
+        }
+    }
+
+    public void showMenu()
+    {
+        if (controlMenu != null)
+        {
+            controlMenu.SetActive(true);
+            Debug.Log("Menu Shown!");
+        }
+        else
+        {
+            Debug.Log("Menu is Null, can't be shown!");
         }
     }
 }

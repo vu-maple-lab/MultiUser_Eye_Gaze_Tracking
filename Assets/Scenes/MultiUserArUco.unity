@@ -211,7 +211,7 @@ PrefabInstance:
     - target: {fileID: 7307063430618434848, guid: 1093263a89abe47499cccf7dcb08effb, type: 3}
       propertyPath: OnValueUpdated.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 62894546}
+      objectReference: {fileID: 805832269}
     - target: {fileID: 7307063430618434848, guid: 1093263a89abe47499cccf7dcb08effb, type: 3}
       propertyPath: OnValueUpdated.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
@@ -424,7 +424,7 @@ PrefabInstance:
     - target: {fileID: 2782317448646102324, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
       propertyPath: OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 62894546}
+      objectReference: {fileID: 805832269}
     - target: {fileID: 2782317448646102324, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
       propertyPath: OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: onToggleOtherCursorVisibility
@@ -448,7 +448,7 @@ PrefabInstance:
     - target: {fileID: 3186675092557098116, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
       propertyPath: OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 62894546}
+      objectReference: {fileID: 805832269}
     - target: {fileID: 3186675092557098116, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
       propertyPath: OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: onCycleMyCursorStyle
@@ -516,7 +516,7 @@ PrefabInstance:
     - target: {fileID: 4318496811725918327, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
       propertyPath: OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 62894546}
+      objectReference: {fileID: 805832269}
     - target: {fileID: 4318496811725918327, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
       propertyPath: OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: onToggleMyCursorVisibility
@@ -528,6 +528,10 @@ PrefabInstance:
     - target: {fileID: 4505189981193056502, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
       propertyPath: m_Name
       value: NearMenu3x3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4505189981193056502, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4746739542917657113, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
       propertyPath: m_Mesh
@@ -668,7 +672,7 @@ PrefabInstance:
     - target: {fileID: 6766582015667425355, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
       propertyPath: OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 62894546}
+      objectReference: {fileID: 805832269}
     - target: {fileID: 6766582015667425355, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
       propertyPath: OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: onToggleGazeRecording
@@ -688,7 +692,7 @@ PrefabInstance:
     - target: {fileID: 7102484898435090800, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
       propertyPath: OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 62894546}
+      objectReference: {fileID: 805832269}
     - target: {fileID: 7102484898435090800, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
       propertyPath: OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: onCycleOtherCursorStyle
@@ -776,39 +780,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 873635201814573931, guid: d82e2f09994ad2f4fb43359bfb977f64, type: 3}
   m_PrefabInstance: {fileID: 62894540}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &62894546
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 53724542}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9e6c6ede43a31824d8dcb30cd2ceb80a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cursorScaleMax: 2.5
-  cursorScaleMin: 0.5
-  slider: {fileID: 14868933}
-  myMaterial: {fileID: 2100000, guid: 31b75c16b0bd06c4c8f1476c7bd20a62, type: 2}
-  recordButton: {fileID: 862991347}
-  screenObj: {fileID: 1509323843}
-  isRecording: 0
-  recordingTrialCount: 0
---- !u!114 &62894547
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 53724542}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7459371f229c495419de7408977c846d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _port: 5557
 --- !u!1 &63870930
 GameObject:
   m_ObjectHideFlags: 0
@@ -852,7 +823,7 @@ MeshCollider:
   m_GameObject: {fileID: 63870930}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   m_Convex: 0
   m_CookingOptions: 30
@@ -1627,7 +1598,7 @@ MeshCollider:
   m_GameObject: {fileID: 500043412}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   m_Convex: 0
   m_CookingOptions: 30
@@ -2195,7 +2166,7 @@ MeshCollider:
   m_GameObject: {fileID: 627522756}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   m_Convex: 0
   m_CookingOptions: 30
@@ -2419,8 +2390,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Calibrating the screen transform. Keep the screen in view, \nWait until
-    the virtual screen frame turns green.
+  m_Text: Calibrating the screen transform. Keep the screen in view, wait until the
+    virtual screen frame disappears.
 --- !u!222 &700041885
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2544,6 +2515,9 @@ GameObject:
   - component: {fileID: 805832264}
   - component: {fileID: 805832266}
   - component: {fileID: 805832267}
+  - component: {fileID: 805832269}
+  - component: {fileID: 805832268}
+  - component: {fileID: 805832270}
   m_Layer: 0
   m_Name: ArucoTrackingScriptHolder
   m_TagString: Untagged
@@ -2643,6 +2617,87 @@ MonoBehaviour:
   screenHeight: 0
   initTrackTotal: 15
   skipFrames: 2
+--- !u!114 &805832268
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 805832262}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7459371f229c495419de7408977c846d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &805832269
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 805832262}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e6c6ede43a31824d8dcb30cd2ceb80a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cursorScaleMax: 2.5
+  cursorScaleMin: 0.5
+  slider: {fileID: 14868933}
+  myMaterial: {fileID: 2100000, guid: 31b75c16b0bd06c4c8f1476c7bd20a62, type: 2}
+  recordButton: {fileID: 862991347}
+  screenObj: {fileID: 1509323843}
+  controlMenu: {fileID: 53724542}
+  isRecording: 0
+  recordingTrialCount: 0
+--- !u!114 &805832270
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 805832262}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45b3eff181cc4244a8a14234096e62fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isFocusRequired: 0
+  keywords:
+  - keyword: Show Menu
+    response:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 805832269}
+          m_TargetAssemblyTypeName: GazeCursorController, Assembly-CSharp
+          m_MethodName: showMenu
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - keyword: Hide Menu
+    response:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 805832269}
+          m_TargetAssemblyTypeName: GazeCursorController, Assembly-CSharp
+          m_MethodName: hideMenu
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  persistentKeywords: 0
+  speechConfirmationTooltipPrefab: {fileID: 0}
 --- !u!1001 &812809156
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2763,7 +2818,7 @@ MeshCollider:
   m_GameObject: {fileID: 816739882}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   m_Convex: 0
   m_CookingOptions: 30
@@ -2861,7 +2916,7 @@ MeshCollider:
   m_GameObject: {fileID: 831611041}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   m_Convex: 0
   m_CookingOptions: 30
@@ -3099,7 +3154,7 @@ MeshCollider:
   m_GameObject: {fileID: 932511483}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   m_Convex: 0
   m_CookingOptions: 30
@@ -3326,7 +3381,7 @@ MeshCollider:
   m_GameObject: {fileID: 1038637426}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   m_Convex: 0
   m_CookingOptions: 30
@@ -4464,7 +4519,7 @@ MeshCollider:
   m_GameObject: {fileID: 1555646211}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   m_Convex: 0
   m_CookingOptions: 30
