@@ -70,7 +70,7 @@ namespace MRTK.Tutorials.MultiUserCapabilities
         }
 
         // private void FixedUpdate()
-        private void Update()
+        private void FixedUpdate()
         {
             if (!photonView.IsMine)
             {

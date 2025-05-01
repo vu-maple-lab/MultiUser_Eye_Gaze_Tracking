@@ -10,6 +10,8 @@ using NetMQ;
 using NetMQ.Sockets;
 using System.Threading;
 using UnityEngine.Assertions;
+using UnityEngine.UI;
+
 
 /* 
  * In charge of the visualization styling control of the cursors, in conjunction with NetMQ Manager and the Control Menu.
@@ -26,6 +28,7 @@ public class GazeCursorController : MonoBehaviour
     [SerializeField] public GameObject recordButton = null;
     [SerializeField] public GameObject screenObj = null;
     [SerializeField] public GameObject controlMenu = null;
+    [SerializeField] public Text dispText = null;
     private float cursorScaleGradient;
     private bool isOtherCursorVisible = true;
     private int otherCursorStyle = 0;
@@ -450,6 +453,14 @@ public class GazeCursorController : MonoBehaviour
         myGazeWriter = new System.IO.StreamWriter(myGazeFilePath, true);
         otherGazeWriter = new System.IO.StreamWriter(otherGazeFilePath, true);
         screenPosWriter = new System.IO.StreamWriter(screenPoseFilePath, true);
+
+        if (dispText != null) 
+        {
+            // string curMsg = dispText.text;
+            //dispText.text = "";
+            //curMsg = curMsg + "\nRecording";
+            dispText.text = "Recording Gaze";
+        }
     }
 
     public void stopRecording()
@@ -467,6 +478,15 @@ public class GazeCursorController : MonoBehaviour
         myGazeWriter?.Dispose();
         otherGazeWriter?.Dispose();
         screenPosWriter?.Dispose();
+
+        if (dispText != null)
+        {
+            // string curMsg = dispText.text;
+            
+            // dispText.text = "";
+            // curMsg = curMsg.Split('\n')[0] + "\nRecording";
+            dispText.text = "Not Recording Gaze";
+        }
     }
 
     public void onToggleGazeRecording()
