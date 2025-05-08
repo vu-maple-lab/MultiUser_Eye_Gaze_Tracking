@@ -68,6 +68,8 @@ namespace MRTK.Tutorials.MultiUserCapabilities
         {
             base.OnCreatedRoom();
             roomNumber++;
+            Debug.Log("\nPhotonLobby.OnCreatedRoom()");
+            Debug.Log("Current room name: " + PhotonNetwork.CurrentRoom.Name);
         }
 
         public void OnCancelButtonClicked()

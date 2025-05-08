@@ -46,7 +46,7 @@ namespace ArUcoDetectionHoloLensUnity
 
         // Params for aruco detection
         // Marker size in meters: 0.08 m = 8 cm
-        public float markerSize;
+        public float markerSize; // 0.016 m
 
         public float RSmoothFactor=0.8f;
         public float VSmoothFactor=0.8f;

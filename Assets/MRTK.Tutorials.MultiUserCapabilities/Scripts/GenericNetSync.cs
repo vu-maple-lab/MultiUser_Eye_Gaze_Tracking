@@ -12,8 +12,12 @@ namespace MRTK.Tutorials.MultiUserCapabilities
     {
         [SerializeField] private bool isUser = default;
         [SerializeField] private float defaultDistanceInMeters = 3;
+        public ExtendedEyeGazeDataProvider extendedEyeGazeDataProvider;
+
         public GameObject parentObj = default;
         public GameObject ScreenObj = default;
+        private GameObject ScreenQuadFront = default;
+        private GameObject ScreenQuadBack = default;
 
         public GameObject Cursor;
 
@@ -43,13 +47,18 @@ namespace MRTK.Tutorials.MultiUserCapabilities
 
         private void Start()
         {
-            PhotonNetwork.SerializationRate = 30;
-            PhotonNetwork.SendRate = 30;
+            PhotonNetwork.SerializationRate = 40;
+            PhotonNetwork.SendRate = 40;
             Cursor = GameObject.Find("DefaultGazeCursorCloseSurface_Invisible(Clone)");
+            extendedEyeGazeDataProvider = GameObject.Find("ArucoTrackingScriptHolder").GetComponent<ExtendedEyeGazeDataProvider>();
             parentObj = GameObject.Find("ScreenObject");
             ScreenObj = GameObject.Find("ScreenObject");
+            ScreenQuadFront = GameObject.Find("ScreenSurfaceQuad (1)");
+            ScreenQuadBack = GameObject.Find("ScreenSurfaceQuad");
+
             lastHitPos = Vector3.zero;
 
+            Debug.Log(extendedEyeGazeDataProvider);
             if (isUser)
             {
                 if (parentObj != null)
@@ -69,6 +78,106 @@ namespace MRTK.Tutorials.MultiUserCapabilities
             networkLocalRotation = startingLocalRotation;
         }
 
+        public static bool GetLocalHitOnPlane(GameObject planeObjectFront, GameObject planeObjectBack, GameObject planeObjectParent, Vector3 rayOrigin, Vector3 rayDirection, out Vector3 localHitPosition, out Quaternion planeRotation)
+        {
+            localHitPosition = Vector3.zero;
+            planeRotation = Quaternion.identity;
+
+            // Build the ray
+            Ray ray = new Ray(rayOrigin, rayDirection.normalized);
+
+            // Check if the GameObject has a collider
+            Collider colliderFront = planeObjectFront.GetComponent<Collider>();
+            if (colliderFront == null)
+            {
+                Debug.LogWarning("The plane GameObject has no collider.");
+            } else
+            {
+                // Raycast against the collider
+                if (colliderFront.Raycast(ray, out RaycastHit hitInfo, Mathf.Infinity))
+                {
+                    //Debug.Log("Front Hit");
+                    // Convert hit point to local coordinates
+                    localHitPosition = planeObjectParent.transform.InverseTransformPoint(hitInfo.point);
+
+                    // Get the plane's rotation in world space
+                    planeRotation = Quaternion.Inverse(planeObjectParent.transform.rotation) * planeObjectFront.transform.rotation;
+
+                    return true;
+                }
+            }
+            
+            Collider colliderBack = planeObjectBack.GetComponent<Collider>();
+            if (colliderBack == null)
+            {
+                Debug.LogWarning("The plane GameObject has no collider.");
+            } else
+            {
+                if (colliderBack.Raycast(ray, out RaycastHit hitInfoBack, Mathf.Infinity))
+                {
+                    //Debug.Log("Back Hit");
+                    // Convert hit point to local coordinates
+                    localHitPosition = planeObjectParent.transform.InverseTransformPoint(hitInfoBack.point);
+
+                    // Get the plane's rotation in world space
+                    planeRotation = Quaternion.Inverse(planeObjectParent.transform.rotation) * planeObjectBack.transform.rotation;
+
+                    return true;
+                }
+            }
+
+
+            return false; // No hit
+        }
+
+
+        public static bool GetLocalHitOnPlanePlaneBased(GameObject planeObjectFront, GameObject planeObjectBack, GameObject planeObjectParent, Vector3 rayOrigin, Vector3 rayDirection, out Vector3 localHitPosition, out Quaternion planeRotation)
+        {
+            localHitPosition = Vector3.zero;
+            planeRotation = Quaternion.identity;
+
+            // Build the ray
+            Ray ray = new Ray(rayOrigin, rayDirection.normalized);
+
+            Plane screenPlane = new Plane(planeObjectFront.transform.forward, planeObjectFront.transform.position);
+            if (screenPlane.Raycast(ray, out float hitPosParam))
+            {
+                //Debug.Log("Back Hit");
+                // Convert hit point to local coordinates
+                localHitPosition = planeObjectParent.transform.InverseTransformPoint(ray.GetPoint(hitPosParam));
+
+                if (!IsPointInFrontOfQuad(planeObjectFront, rayOrigin))
+                {
+                    planeRotation = Quaternion.Inverse(planeObjectParent.transform.rotation) * planeObjectFront.transform.rotation;
+                } 
+                else
+                {
+                    planeRotation = Quaternion.Inverse(planeObjectParent.transform.rotation) * planeObjectBack.transform.rotation;
+                }
+                // Get the plane's rotation in world space
+
+                return true;
+            }
+
+
+            return false; // No hit
+        }
+
+        public static bool IsPointInFrontOfQuad(GameObject quadObject, Vector3 point)
+        {
+            Vector3 quadPosition = quadObject.transform.position;
+            Vector3 quadForward = quadObject.transform.forward;
+
+            // Direction from quad to point
+            Vector3 toPoint = point - quadPosition;
+
+            // Dot product: positive if on the forward side
+            float dot = Vector3.Dot(quadForward, toPoint);
+
+            return dot > 0f;
+        }
+
+
         // private void FixedUpdate()
         private void FixedUpdate()
         {
@@ -80,29 +189,37 @@ namespace MRTK.Tutorials.MultiUserCapabilities
 
             if (photonView.IsMine && isUser)
             {
+
+#if ENABLE_WINMD_SUPPORT
+                System.DateTime timestamp = System.DateTime.Now;
+                var combinedGazeReadingInWorldSpace = extendedEyeGazeDataProvider.GetWorldSpaceGazeReading(ExtendedEyeGazeDataProvider.GazeType.Combined, timestamp);
+                //var combinedGazeReadingInWorldSpace = extendedEyeGazeDataProvider.GetCameraSpaceGazeReading(ExtendedEyeGazeDataProvider.GazeType.Combined, timestamp);
+
+                if (combinedGazeReadingInWorldSpace.IsValid)
+                {
+                    if (GetLocalHitOnPlanePlaneBased(ScreenQuadFront, ScreenQuadBack, ScreenObj, combinedGazeReadingInWorldSpace.EyePosition, combinedGazeReadingInWorldSpace.GazeDirection, out Vector3 localHitPosition, out Quaternion planeRotation))
+                    {
+                        transform.localPosition = localHitPosition;  // ScreenObj.transform.InverseTransformPoint(localHitPosition);
+                                                                     //transform.localRotation = Quaternion.Inverse(ScreenObj.transform.rotation) * Quaternion.LookRotation(gazeProvider.HitNormal, Vector3.up);
+                        transform.localRotation = planeRotation; // Quaternion.Inverse(ScreenObj.transform.rotation) * planeRotation;
+                    }
+                }
+#else
                 var gazeProvider = CoreServices.InputSystem?.EyeGazeProvider;
                 if (gazeProvider != null)
-                {    
-                    // EyeTrackingTarget lookedAtEyeTarget = EyeTrackingTarget.LookedAtEyeTarget;
-                    Vector3 curHitPos = gazeProvider.HitPosition;
-                    if (!curHitPos.Equals(lastHitPos))
+                {
+                    if (GetLocalHitOnPlanePlaneBased(ScreenQuadFront, ScreenQuadBack, ScreenObj, gazeProvider.GazeOrigin, gazeProvider.GazeDirection, out Vector3 localHitPosition, out Quaternion planeRotation))
                     {
-                        // if nothing is hit, gazeProvider.HitPosition returns the last hit pos data; Used this fact to check if there is any hit positions.
-                        // TODO: this is horrible approach, you should change to use physics.raycast for proper collider detection. 
-                        // https://docs.unity3d.com/ScriptReference/Physics.Raycast.html
-                        transform.localPosition = ScreenObj.transform.InverseTransformPoint(curHitPos);
-                        transform.localRotation = Quaternion.Inverse(ScreenObj.transform.rotation) * Quaternion.LookRotation(gazeProvider.HitNormal, Vector3.up);
-                        lastHitPos = curHitPos; 
+                        transform.localPosition = localHitPosition;  // ScreenObj.transform.InverseTransformPoint(localHitPosition);
+                                                                     //transform.localRotation = Quaternion.Inverse(ScreenObj.transform.rotation) * Quaternion.LookRotation(gazeProvider.HitNormal, Vector3.up);
+                        transform.localRotation = planeRotation; // Quaternion.Inverse(ScreenObj.transform.rotation) * planeRotation;
                     }
-                    else
-                    {
-                        transform.localPosition = ScreenObj.transform.InverseTransformPoint(gazeProvider.GazeOrigin + gazeProvider.GazeDirection.normalized * defaultDistanceInMeters);
-                        transform.localRotation = Quaternion.Inverse(ScreenObj.transform.rotation) * Cursor.transform.rotation;
-                    }
-                    // transform.localPosition = ScreenObj.transform.InverseTransformPoint(Cursor.transform.position);
-                    
                 }
-         
+#endif
+
+
+
+
             }
         }
     }

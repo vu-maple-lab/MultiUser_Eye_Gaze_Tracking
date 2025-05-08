@@ -2783,6 +2783,7 @@ GameObject:
   - component: {fileID: 805832269}
   - component: {fileID: 805832268}
   - component: {fileID: 805832270}
+  - component: {fileID: 805832271}
   m_Layer: 0
   m_Name: ArucoTrackingScriptHolder
   m_TagString: Untagged
@@ -2821,7 +2822,7 @@ MonoBehaviour:
   deviceType: 1
   sensorTypePv: 0
   arUcoDictionaryName: 0
-  markerSize: 0.16
+  markerSize: 0.05
   RSmoothFactor: 0.2
   VSmoothFactor: 0.2
   initTrackTotal: 15
@@ -2914,6 +2915,7 @@ MonoBehaviour:
   screenObj: {fileID: 1509323843}
   controlMenu: {fileID: 53724542}
   dispText: {fileID: 152394564}
+  extendedEyeGazeDataProvider: {fileID: 0}
   isRecording: 0
   recordingTrialCount: 0
 --- !u!114 &805832270
@@ -2964,6 +2966,18 @@ MonoBehaviour:
           m_CallState: 2
   persistentKeywords: 0
   speechConfirmationTooltipPrefab: {fileID: 0}
+--- !u!114 &805832271
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 805832262}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5deee428e18cb0f4b80f6b18aec69220, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &812809156
 PrefabInstance:
   m_ObjectHideFlags: 0

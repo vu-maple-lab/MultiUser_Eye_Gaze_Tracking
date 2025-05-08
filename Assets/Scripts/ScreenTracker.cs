@@ -228,8 +228,8 @@ public class ScreenTracker : MonoBehaviour
         }
         */
         // Bottom Left, Bottom Right, Top Left, Top Right
-        screenWidth = (Mathf.Abs(BRScreenPos.x - BLScreenPos.x) + Mathf.Abs(TRScreenPos.x - TLScreenPos.x)) / 2 + arucoMarkerDetectorObj.GetComponent<ArUcoMarkerDetection>().markerSize * 1.5f;
-        screenHeight = (Mathf.Abs(TLScreenPos.y - BLScreenPos.y) + Mathf.Abs(TRScreenPos.y - BRScreenPos.y)) / 2 + arucoMarkerDetectorObj.GetComponent<ArUcoMarkerDetection>().markerSize * 1.5f;
+        screenWidth = (Mathf.Abs(BRScreenPos.x - BLScreenPos.x) + Mathf.Abs(TRScreenPos.x - TLScreenPos.x)) / 2 + arucoMarkerDetectorObj.GetComponent<ArUcoMarkerDetection>().markerSize * 2.1f;
+        screenHeight = (Mathf.Abs(TLScreenPos.y - BLScreenPos.y) + Mathf.Abs(TRScreenPos.y - BRScreenPos.y)) / 2 + arucoMarkerDetectorObj.GetComponent<ArUcoMarkerDetection>().markerSize * 2.1f;
         // debugText.text += string.Format("\nWidth {0}, Height {1}", screenWidth, screenHeight);
     }
 
