@@ -22,6 +22,7 @@ public class ScreenTracker : MonoBehaviour
     [SerializeField] Material screenMaterialGreen = null;
     [HideInInspector] public List<ArucoMarker> markers; // Bottom Left, Bottom Right, Top Left, Top Right
     [HideInInspector] public List<GameObject> markerObjs; // Bottom Left, Bottom Right, Top Left, Top Right
+    [SerializeField] AppConfig appConfig;
     public Text debugText = null;
 
     public bool screenCenterToMarkersDetermined = false;
@@ -63,6 +64,11 @@ public class ScreenTracker : MonoBehaviour
 
     private void Update()
     { // Using Update() instead of fixedUpdate, because arucoMarkerDetection also uses it.
+        if (appConfig != null && (appConfig.appOperation == false || appConfig.arUcoOperation == false))
+        {
+            //Debug.Log("Not tracking screen");
+            return;
+        }
         _frameCount++;
 
         if (_frameCount == skipFrames)

@@ -48,12 +48,12 @@ namespace MRTK.Tutorials.MultiUserCapabilities
 
         public override void OnConnectedToMaster()
         {
-            var randomUserId = Random.Range(0, 999999);
+            var randomUserId = Random.Range(0, 9999999);
             PhotonNetwork.AutomaticallySyncScene = true;
             PhotonNetwork.AuthValues = new AuthenticationValues();
             PhotonNetwork.AuthValues.UserId = randomUserId.ToString();
             userIdCount++;
-            PhotonNetwork.NickName = PhotonNetwork.AuthValues.UserId;
+            PhotonNetwork.NickName = SystemInfo.deviceName; // PhotonNetwork.AuthValues.UserId;
 
             if (PhotonNetwork.CurrentLobby == null)
             {
@@ -140,6 +140,7 @@ namespace MRTK.Tutorials.MultiUserCapabilities
             Debug.LogError("Creating Room Failed");
             //CreateRoom();
             CreateSpecificRoom();
+            // TODO: maybe set max tries, and quit the app if fails to create a specific room for too many times.
         }
 
         public override void OnCreatedRoom()

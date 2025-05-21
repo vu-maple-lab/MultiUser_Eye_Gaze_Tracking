@@ -34,6 +34,8 @@ namespace ArUcoDetectionHoloLensUnity
     // https://docs.unity3d.com/2018.4/Documentation/Manual/IL2CPP-WindowsRuntimeSupport.html
     public class ArUcoMarkerDetection : MonoBehaviour
     {
+        [SerializeField] AppConfig appConfig;
+
         private bool _isWorldAnchored = false;
 
         public Text myText=null;
@@ -140,6 +142,11 @@ namespace ArUcoDetectionHoloLensUnity
         // Update is called once per frame
         async void Update()
         {
+            if (appConfig != null && (appConfig.appOperation == false || appConfig.arUcoOperation == false))
+            {
+                //Debug.Log("Not Tracking marker");
+                return;
+            }
 #if ENABLE_WINMD_SUPPORT
             _frameCount += 1;
 

@@ -4,6 +4,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Security.Cryptography;
+using System.Text;
 using TMPro;
 using UnityEngine;
 using NetMQ;
@@ -29,8 +31,11 @@ public class GazeCursorController : MonoBehaviour
     [SerializeField] public GameObject screenObj = null;
     [SerializeField] public GameObject controlMenu = null;
     [SerializeField] public Text dispText = null;
-    public ExtendedEyeGazeDataProvider extendedEyeGazeDataProvider;
+    public AppConfig appConfig;
+    //public ExtendedEyeGazeDataProvider extendedEyeGazeDataProvider;
 
+    public bool amIPrimaryUser = true;
+    public int myUserIdx = -1;
     private float cursorScaleGradient;
     private bool isOtherCursorVisible = true;
     private int otherCursorStyle = 0;
@@ -57,6 +62,10 @@ public class GazeCursorController : MonoBehaviour
     //private Coroutine recordingCoroutine;
     private float dataRecordingRate = 90.0f;
 
+    private int _frameCount = 0;
+    private int userCheckSkipFrame = 5;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -69,7 +78,7 @@ public class GazeCursorController : MonoBehaviour
         slider.GetComponent<PinchSlider>().SliderValue = curScaleValue;
         myPhotoViewObj = null;
         otherPhotoViewObj = null;
-        extendedEyeGazeDataProvider = gameObject.GetComponent<ExtendedEyeGazeDataProvider>();
+        //extendedEyeGazeDataProvider = gameObject.GetComponent<ExtendedEyeGazeDataProvider>();
 
         isOtherCursorVisible = true;
         isMyCursorVisible = true;
@@ -97,30 +106,98 @@ public class GazeCursorController : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        if (appConfig != null && (appConfig.appOperation == false || appConfig.gazeSaveOperation == false))
+        {
+            //Debug.Log("Not saving gaze");
+            return;
+        }
         //string message = subscriberSocket.ReceiveFrameString();
         //ProcessMessage(message);
 
-        // Retrieve (both) photonViews in the scene
-        // Assumptions: 1. Only 2 photonViews are present. 2. One is my gaze, the other is the other's gaze.
-        // TODO: very inefficient code, try improve it in the future
-        var photonViews = FindObjectsOfType<PhotonView>();
-        foreach (PhotonView view in photonViews)
+        _frameCount += 1;
+        if (_frameCount == userCheckSkipFrame)
         {
-            if (view.IsMine)
-            { 
-                if (myPhotoViewObj == null)
+            _frameCount = 0;
+            // Retrieve (both) photonViews in the scene
+            // Assumptions: 1. Only 2 photonViews are present. 2. One is my gaze, the other is the other's gaze.
+            // TODO: very inefficient code, try improve it in the future
+            var photonViews = FindObjectsOfType<PhotonView>();
+            int curLowestIdx = System.Int32.MaxValue;
+            string curLowestNickName = null;
+            foreach (PhotonView view in photonViews)
+            {
+                if (view.IsMine)
                 {
-                    myPhotoViewObj = view.gameObject;
-                    for (int i = 0; i < myPhotoViewObj.transform.childCount; i++)
+                    if (myPhotoViewObj == null)
                     {
-                        myPhotoViewObj.transform.GetChild(i).gameObject.GetComponent<Renderer>().material = myMaterial;
+                        myPhotoViewObj = view.gameObject;
+                        for (int i = 0; i < myPhotoViewObj.transform.childCount; i++)
+                        {
+                            myPhotoViewObj.transform.GetChild(i).gameObject.GetComponent<Renderer>().material = myMaterial;
+                        }
                     }
                 }
-            } else 
-            {
-                otherPhotoViewObj = view.gameObject;
+                else
+                {
+                    otherPhotoViewObj = view.gameObject;
+                    if (curLowestNickName == null || StringComparerHelper.CompareHashedStrings(view.Owner.NickName, curLowestNickName) < 0)
+                    {
+                        curLowestNickName = view.Owner.NickName;
+                    }
+                    //if (int.TryParse(otherPhotoViewObj.name.Substring(4), out int otherUserId))
+                    //{
+                    //    if (curLowestNickName == null || StringComparerHelper.CompareHashedStrings(view.Owner.NickName, curLowestNickName) < 0)
+                    //    {
+                    //        curLowestIdx = otherUserId;
+                    //        curLowestNickName = view.Owner.NickName;
+                    //    }
+                    //    //Debug.Log("Extracted otherUserIdx: " + otherUserId);
+                    //}
+                }
             }
+            if (myPhotoViewObj != null)
+            {
+                if (curLowestNickName == null || StringComparerHelper.CompareHashedStrings(myPhotoViewObj.GetComponent<PhotonView>().Owner.NickName, curLowestNickName) < 0)
+                {
+                    curLowestNickName = myPhotoViewObj.GetComponent<PhotonView>().Owner.NickName;
+                    amIPrimaryUser = true;
+                }
+                else
+                {
+                    amIPrimaryUser = false;
+                }
+                //if (myPhotoViewObj != null)
+                //{
+                //    Debug.Log("My name is: " + myPhotoViewObj.name);
+                //}
+                ////Debug.Log(myUserIdx);
+                //Debug.Log("cur lowest NickName: " + curLowestNickName);
+                //Debug.Log("Am I primary User " + amIPrimaryUser);
+            }
+            //if (myUserIdx == -1  && myPhotoViewObj != null)
+            //{
+            //    string numberPart = myPhotoViewObj.name.Substring(4);
+            //    Debug.Log("Processing my user id " + numberPart);
+            //    if (int.TryParse(numberPart, out int userId))
+            //    {
+            //        myUserIdx = userId;
+            //        if (myUserIdx < curLowestIdx)
+            //        {
+            //            curLowestIdx = myUserIdx;
+            //        }
+            //        //Debug.Log("extracted myuseridx: " + userId);
+            //    }
+            //}
+
+            //if (myUserIdx <= curLowestIdx)
+            //{
+            //    amIPrimaryUser = true;
+            //} else
+            //{
+            //    amIPrimaryUser = false;
+            //}
         }
+
 
         RecordData();
 
@@ -648,5 +725,30 @@ public class GazeCursorController : MonoBehaviour
         {
             Debug.Log("Menu is Null, can't be shown!");
         }
+    }
+}
+
+
+public static class StringComparerHelper
+{
+    public static byte[] HashStringSHA256(string input)
+    {
+        using (SHA256 sha256 = SHA256.Create())
+        {
+            return sha256.ComputeHash(Encoding.UTF8.GetBytes(input));
+        }
+    }
+
+    public static int CompareHashedStrings(string a, string b)
+    {
+        byte[] hashA = HashStringSHA256(a);
+        byte[] hashB = HashStringSHA256(b);
+
+        for (int i = 0; i < hashA.Length; i++)
+        {
+            if (hashA[i] < hashB[i]) return -1;
+            if (hashA[i] > hashB[i]) return 1;
+        }
+        return 0;
     }
 }

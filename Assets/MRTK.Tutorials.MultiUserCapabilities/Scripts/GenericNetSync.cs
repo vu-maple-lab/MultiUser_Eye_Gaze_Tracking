@@ -13,6 +13,8 @@ namespace MRTK.Tutorials.MultiUserCapabilities
         [SerializeField] private bool isUser = default;
         [SerializeField] private float defaultDistanceInMeters = 3;
         public ExtendedEyeGazeDataProvider extendedEyeGazeDataProvider;
+        [HideInInspector] public string deviceName;
+        public AppConfig appConfig;
 
         public GameObject parentObj = default;
         public GameObject ScreenObj = default;
@@ -40,17 +42,19 @@ namespace MRTK.Tutorials.MultiUserCapabilities
             }
             else
             {
-                networkLocalPosition = (Vector3) stream.ReceiveNext();
-                networkLocalRotation = (Quaternion) stream.ReceiveNext();
+                networkLocalPosition = (Vector3)stream.ReceiveNext();
+                networkLocalRotation = (Quaternion)stream.ReceiveNext();
             }
         }
 
         private void Start()
         {
+            deviceName = SystemInfo.deviceName;
             PhotonNetwork.SerializationRate = 40;
             PhotonNetwork.SendRate = 40;
             Cursor = GameObject.Find("DefaultGazeCursorCloseSurface_Invisible(Clone)");
             extendedEyeGazeDataProvider = GameObject.Find("ArucoTrackingScriptHolder").GetComponent<ExtendedEyeGazeDataProvider>();
+            appConfig = GameObject.Find("ArucoTrackingScriptHolder").GetComponent<AppConfig>();
             parentObj = GameObject.Find("ScreenObject");
             ScreenObj = GameObject.Find("ScreenObject");
             ScreenQuadFront = GameObject.Find("ScreenSurfaceQuad (1)");
@@ -66,7 +70,7 @@ namespace MRTK.Tutorials.MultiUserCapabilities
                     transform.parent = parentObj.transform;
                 }
                 // if (TableAnchor.Instance != null) transform.parent = FindObjectOfType<TableAnchor>().transform;
-                
+
                 if (photonView.IsMine) GenericNetworkManager.Instance.localUser = photonView;
             }
 
@@ -106,7 +110,7 @@ namespace MRTK.Tutorials.MultiUserCapabilities
                     return true;
                 }
             }
-            
+
             Collider colliderBack = planeObjectBack.GetComponent<Collider>();
             if (colliderBack == null)
             {
@@ -149,7 +153,7 @@ namespace MRTK.Tutorials.MultiUserCapabilities
                 if (!IsPointInFrontOfQuad(planeObjectFront, rayOrigin))
                 {
                     planeRotation = Quaternion.Inverse(planeObjectParent.transform.rotation) * planeObjectFront.transform.rotation;
-                } 
+                }
                 else
                 {
                     planeRotation = Quaternion.Inverse(planeObjectParent.transform.rotation) * planeObjectBack.transform.rotation;
@@ -181,6 +185,11 @@ namespace MRTK.Tutorials.MultiUserCapabilities
         // private void FixedUpdate()
         private void FixedUpdate()
         {
+            if (appConfig != null && (appConfig.appOperation == false || appConfig.gazeShareOperation == false))
+            {
+                //Debug.Log("Not sharing gaze");
+                return;
+            }
             if (!photonView.IsMine)
             {
                 transform.localPosition = networkLocalPosition;
