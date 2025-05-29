@@ -71,7 +71,7 @@ public class GazeCursorController : MonoBehaviour
     {
         AsyncIO.ForceDotNet.Force();
 
-        Time.fixedDeltaTime = 0.011111f;
+        Time.fixedDeltaTime = 0.016667f; // 0.011111f;
         // Application.targetFrameRate = -1;
         cursorScaleGradient = cursorScaleMax - cursorScaleMin;
         float curScaleValue = (1 - cursorScaleMin) / cursorScaleGradient;
@@ -122,7 +122,7 @@ public class GazeCursorController : MonoBehaviour
             // Assumptions: 1. Only 2 photonViews are present. 2. One is my gaze, the other is the other's gaze.
             // TODO: very inefficient code, try improve it in the future
             var photonViews = FindObjectsOfType<PhotonView>();
-            int curLowestIdx = System.Int32.MaxValue;
+            //int curLowestIdx = System.Int32.MaxValue;
             string curLowestNickName = null;
             foreach (PhotonView view in photonViews)
             {

@@ -35,6 +35,7 @@ namespace MRTK.Tutorials.MultiUserCapabilities
 
         void IPunObservable.OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
         {
+            Debug.Log("OnPhotonSerializeView Called");
             if (stream.IsWriting)
             {
                 stream.SendNext(transform.localPosition);
@@ -51,7 +52,7 @@ namespace MRTK.Tutorials.MultiUserCapabilities
         {
             deviceName = SystemInfo.deviceName;
             PhotonNetwork.SerializationRate = 40;
-            PhotonNetwork.SendRate = 40;
+            PhotonNetwork.SendRate = 3;
             Cursor = GameObject.Find("DefaultGazeCursorCloseSurface_Invisible(Clone)");
             extendedEyeGazeDataProvider = GameObject.Find("ArucoTrackingScriptHolder").GetComponent<ExtendedEyeGazeDataProvider>();
             appConfig = GameObject.Find("ArucoTrackingScriptHolder").GetComponent<AppConfig>();
@@ -200,13 +201,25 @@ namespace MRTK.Tutorials.MultiUserCapabilities
             {
 
 #if ENABLE_WINMD_SUPPORT
-                System.DateTime timestamp = System.DateTime.Now;
-                var combinedGazeReadingInWorldSpace = extendedEyeGazeDataProvider.GetWorldSpaceGazeReading(ExtendedEyeGazeDataProvider.GazeType.Combined, timestamp);
-                //var combinedGazeReadingInWorldSpace = extendedEyeGazeDataProvider.GetCameraSpaceGazeReading(ExtendedEyeGazeDataProvider.GazeType.Combined, timestamp);
+                //System.DateTime timestamp = System.DateTime.Now;
+                //var combinedGazeReadingInWorldSpace = extendedEyeGazeDataProvider.GetWorldSpaceGazeReading(ExtendedEyeGazeDataProvider.GazeType.Combined, timestamp);
+                ////var combinedGazeReadingInWorldSpace = extendedEyeGazeDataProvider.GetCameraSpaceGazeReading(ExtendedEyeGazeDataProvider.GazeType.Combined, timestamp);
 
-                if (combinedGazeReadingInWorldSpace.IsValid)
+                //if (combinedGazeReadingInWorldSpace.IsValid)
+                //{
+                //    Debug.Log($"Successful Extended Gaze Read at: {timestamp.ToFileTimeUtc()}");
+                //    if (GetLocalHitOnPlanePlaneBased(ScreenQuadFront, ScreenQuadBack, ScreenObj, combinedGazeReadingInWorldSpace.EyePosition, combinedGazeReadingInWorldSpace.GazeDirection, out Vector3 localHitPosition, out Quaternion planeRotation))
+                //    {
+                //        transform.localPosition = localHitPosition;  // ScreenObj.transform.InverseTransformPoint(localHitPosition);
+                //                                                     //transform.localRotation = Quaternion.Inverse(ScreenObj.transform.rotation) * Quaternion.LookRotation(gazeProvider.HitNormal, Vector3.up);
+                //        transform.localRotation = planeRotation; // Quaternion.Inverse(ScreenObj.transform.rotation) * planeRotation;
+                //    }
+                //}
+
+                var gazeProvider = CoreServices.InputSystem?.EyeGazeProvider;
+                if (gazeProvider != null)
                 {
-                    if (GetLocalHitOnPlanePlaneBased(ScreenQuadFront, ScreenQuadBack, ScreenObj, combinedGazeReadingInWorldSpace.EyePosition, combinedGazeReadingInWorldSpace.GazeDirection, out Vector3 localHitPosition, out Quaternion planeRotation))
+                    if (GetLocalHitOnPlanePlaneBased(ScreenQuadFront, ScreenQuadBack, ScreenObj, gazeProvider.GazeOrigin, gazeProvider.GazeDirection, out Vector3 localHitPosition, out Quaternion planeRotation))
                     {
                         transform.localPosition = localHitPosition;  // ScreenObj.transform.InverseTransformPoint(localHitPosition);
                                                                      //transform.localRotation = Quaternion.Inverse(ScreenObj.transform.rotation) * Quaternion.LookRotation(gazeProvider.HitNormal, Vector3.up);
