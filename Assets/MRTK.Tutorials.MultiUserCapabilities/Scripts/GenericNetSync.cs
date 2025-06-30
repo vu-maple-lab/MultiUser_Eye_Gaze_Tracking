@@ -32,17 +32,24 @@ namespace MRTK.Tutorials.MultiUserCapabilities
         private Quaternion startingLocalRotation;
 
         private Vector3 lastHitPos = default;
+        private bool newDataToBeSent = false;
 
         void IPunObservable.OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
         {
-            Debug.Log("OnPhotonSerializeView Called");
             if (stream.IsWriting)
             {
-                stream.SendNext(transform.localPosition);
-                stream.SendNext(transform.localRotation);
+                if (newDataToBeSent == true)
+                {
+                    newDataToBeSent = false;
+                    //Debug.Log("OnPhotonSerializeView Writing");
+                    stream.SendNext(transform.localPosition);
+                    stream.SendNext(transform.localRotation);
+
+                }
             }
             else
             {
+                //Debug.Log("OnPhotonSerializeView Receiving");
                 networkLocalPosition = (Vector3)stream.ReceiveNext();
                 networkLocalRotation = (Quaternion)stream.ReceiveNext();
             }
@@ -51,7 +58,7 @@ namespace MRTK.Tutorials.MultiUserCapabilities
         private void Start()
         {
             deviceName = SystemInfo.deviceName;
-            PhotonNetwork.SerializationRate = 40;
+            PhotonNetwork.SerializationRate = 30;
             PhotonNetwork.SendRate = 3;
             Cursor = GameObject.Find("DefaultGazeCursorCloseSurface_Invisible(Clone)");
             extendedEyeGazeDataProvider = GameObject.Find("ArucoTrackingScriptHolder").GetComponent<ExtendedEyeGazeDataProvider>();
@@ -62,6 +69,7 @@ namespace MRTK.Tutorials.MultiUserCapabilities
             ScreenQuadBack = GameObject.Find("ScreenSurfaceQuad");
 
             lastHitPos = Vector3.zero;
+            newDataToBeSent = false;
 
             Debug.Log(extendedEyeGazeDataProvider);
             if (isUser)
@@ -201,40 +209,46 @@ namespace MRTK.Tutorials.MultiUserCapabilities
             {
 
 #if ENABLE_WINMD_SUPPORT
-                //System.DateTime timestamp = System.DateTime.Now;
-                //var combinedGazeReadingInWorldSpace = extendedEyeGazeDataProvider.GetWorldSpaceGazeReading(ExtendedEyeGazeDataProvider.GazeType.Combined, timestamp);
-                ////var combinedGazeReadingInWorldSpace = extendedEyeGazeDataProvider.GetCameraSpaceGazeReading(ExtendedEyeGazeDataProvider.GazeType.Combined, timestamp);
+                System.DateTime timestamp = System.DateTime.Now;
+                var combinedGazeReadingInWorldSpace = extendedEyeGazeDataProvider.GetWorldSpaceGazeReading(ExtendedEyeGazeDataProvider.GazeType.Combined, timestamp);
+                //var combinedGazeReadingInWorldSpace = extendedEyeGazeDataProvider.GetCameraSpaceGazeReading(ExtendedEyeGazeDataProvider.GazeType.Combined, timestamp);
 
-                //if (combinedGazeReadingInWorldSpace.IsValid)
-                //{
-                //    Debug.Log($"Successful Extended Gaze Read at: {timestamp.ToFileTimeUtc()}");
-                //    if (GetLocalHitOnPlanePlaneBased(ScreenQuadFront, ScreenQuadBack, ScreenObj, combinedGazeReadingInWorldSpace.EyePosition, combinedGazeReadingInWorldSpace.GazeDirection, out Vector3 localHitPosition, out Quaternion planeRotation))
-                //    {
-                //        transform.localPosition = localHitPosition;  // ScreenObj.transform.InverseTransformPoint(localHitPosition);
-                //                                                     //transform.localRotation = Quaternion.Inverse(ScreenObj.transform.rotation) * Quaternion.LookRotation(gazeProvider.HitNormal, Vector3.up);
-                //        transform.localRotation = planeRotation; // Quaternion.Inverse(ScreenObj.transform.rotation) * planeRotation;
-                //    }
-                //}
-
-                var gazeProvider = CoreServices.InputSystem?.EyeGazeProvider;
-                if (gazeProvider != null)
+                if (combinedGazeReadingInWorldSpace.IsValid)
                 {
-                    if (GetLocalHitOnPlanePlaneBased(ScreenQuadFront, ScreenQuadBack, ScreenObj, gazeProvider.GazeOrigin, gazeProvider.GazeDirection, out Vector3 localHitPosition, out Quaternion planeRotation))
+                    //Debug.Log($"Successful Extended Gaze Read at: {timestamp.ToFileTimeUtc()}");
+                    if (GetLocalHitOnPlanePlaneBased(ScreenQuadFront, ScreenQuadBack, ScreenObj, combinedGazeReadingInWorldSpace.EyePosition, combinedGazeReadingInWorldSpace.GazeDirection, out Vector3 localHitPosition, out Quaternion planeRotation))
                     {
-                        transform.localPosition = localHitPosition;  // ScreenObj.transform.InverseTransformPoint(localHitPosition);
-                                                                     //transform.localRotation = Quaternion.Inverse(ScreenObj.transform.rotation) * Quaternion.LookRotation(gazeProvider.HitNormal, Vector3.up);
-                        transform.localRotation = planeRotation; // Quaternion.Inverse(ScreenObj.transform.rotation) * planeRotation;
+                        if (!(transform.localPosition == localHitPosition && transform.localRotation == planeRotation))
+                        {
+                            newDataToBeSent = true;
+                            transform.localPosition = localHitPosition;  // ScreenObj.transform.InverseTransformPoint(localHitPosition);
+                                                                         //transform.localRotation = Quaternion.Inverse(ScreenObj.transform.rotation) * Quaternion.LookRotation(gazeProvider.HitNormal, Vector3.up);
+                            transform.localRotation = planeRotation; // Quaternion.Inverse(ScreenObj.transform.rotation) * planeRotation;
+                        } else
+                        {
+                            //Debug.Log("Current update same as before");
+                        }
+                        
                     }
                 }
+
 #else
                 var gazeProvider = CoreServices.InputSystem?.EyeGazeProvider;
                 if (gazeProvider != null)
                 {
                     if (GetLocalHitOnPlanePlaneBased(ScreenQuadFront, ScreenQuadBack, ScreenObj, gazeProvider.GazeOrigin, gazeProvider.GazeDirection, out Vector3 localHitPosition, out Quaternion planeRotation))
                     {
-                        transform.localPosition = localHitPosition;  // ScreenObj.transform.InverseTransformPoint(localHitPosition);
-                                                                     //transform.localRotation = Quaternion.Inverse(ScreenObj.transform.rotation) * Quaternion.LookRotation(gazeProvider.HitNormal, Vector3.up);
-                        transform.localRotation = planeRotation; // Quaternion.Inverse(ScreenObj.transform.rotation) * planeRotation;
+                        if (!(transform.localPosition == localHitPosition && transform.localRotation == planeRotation))
+                        {
+                            newDataToBeSent = true;
+                            transform.localPosition = localHitPosition;  // ScreenObj.transform.InverseTransformPoint(localHitPosition);
+                                                                         //transform.localRotation = Quaternion.Inverse(ScreenObj.transform.rotation) * Quaternion.LookRotation(gazeProvider.HitNormal, Vector3.up);
+                            transform.localRotation = planeRotation; // Quaternion.Inverse(ScreenObj.transform.rotation) * planeRotation;
+                        } else
+                        {
+                            //Debug.Log("Current update same as before");
+                        }
+                        
                     }
                 }
 #endif
