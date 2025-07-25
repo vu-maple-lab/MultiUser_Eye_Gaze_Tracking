@@ -14,7 +14,13 @@ public class NetMQManager : MonoBehaviour
     [SerializeField] public AppConfig appConfig;
 
     private ConcurrentQueue<string> messageQueue = new ConcurrentQueue<string>();
+    private string connectionAddress = "tcp://192.168.0.10:7788";
 
+    private bool isConnected = false;
+
+    // Public events
+    public static event Action OnNetMQConnected;
+    public static event Action OnNetMQDisconnected;
 
     // Start is called before the first frame update
     void Start()
@@ -41,8 +47,9 @@ public class NetMQManager : MonoBehaviour
 
     private void ListenerLoop()
     {
-        AsyncIO.ForceDotNet.Force(); // Ensure proper cleanup of sockets
-        using (subscriberSocket = new SubscriberSocket())
+        AsyncIO.ForceDotNet.Force();
+
+        while (listenerRunning)
         {
             subscriberSocket.Connect("tcp://192.168.0.10:7788"); // Replace with the publisher's IP and port
             subscriberSocket.SubscribeToAnyTopic(); // Doing manual subscribing for now...
@@ -54,11 +61,23 @@ public class NetMQManager : MonoBehaviour
                     //string message = subscriberSocket.ReceiveFrameString();
                     //Debug.Log(message);
 
-                    if (subscriberSocket.TryReceiveFrameString(out string recv))
+                    Debug.Log("[NetMQ] Connected to " + connectionAddress);
+                    UpdateConnectionState(true); // Signal connected
+
+                    while (listenerRunning && subscriberSocket != null)
                     {
-                        print($"server recv: {recv}");
-                        messageQueue.Enqueue(recv);
-                        //_server.sendframe("world");
+                        try
+                        {
+                            if (subscriberSocket.TryReceiveFrameString(TimeSpan.FromMilliseconds(100), out string recv))
+                            {
+                                messageQueue.Enqueue(recv);
+                            }
+                        }
+                        catch (Exception innerEx)
+                        {
+                            Debug.LogWarning("[NetMQ] Receive error: " + innerEx.Message);
+                            break;
+                        }
                     }
                     //ProcessMessage(message);
                 }
@@ -67,8 +86,37 @@ public class NetMQManager : MonoBehaviour
                     // Handle socket closure or other issues gracefully
                 }
             }
+            catch (Exception ex)
+            {
+                Debug.LogWarning("[NetMQ] Connection failed: " + ex.Message);
+            }
+
+            if (listenerRunning)
+            {
+                UpdateConnectionState(false); //  Signal disconnected
+                Debug.Log("[NetMQ] Retrying connection in 5 seconds...");
+                Thread.Sleep(5000);
+            }
         }
         NetMQConfig.Cleanup();
+    }
+
+    private void UpdateConnectionState(bool connectedNow)
+    {
+        if (connectedNow != isConnected)
+        {
+            isConnected = connectedNow;
+            if (isConnected)
+            {
+                Debug.Log("[NetMQ] Connection established.");
+                OnNetMQConnected?.Invoke();
+            }
+            else
+            {
+                Debug.LogWarning("[NetMQ] Connection lost.");
+                OnNetMQDisconnected?.Invoke();
+            }
+        }
     }
 
     private void ProcessMessage(string message)
@@ -81,8 +129,7 @@ public class NetMQManager : MonoBehaviour
 
         string topic = parts[0].Trim();
         string payload = parts[1].Trim();
-
-        string[] subtopics = topic.Split("/");
+        string[] subtopics = topic.Split('/');
         if (subtopics.Length < 1) return;
 
         if (int.TryParse(subtopics[0][4..], out int targetUserId))
@@ -245,6 +292,7 @@ public class NetMQManager : MonoBehaviour
         }
 
         subscriberSocket?.Close();
+        subscriberSocket?.Dispose();
         NetMQConfig.Cleanup(false);
     }
 
@@ -256,6 +304,7 @@ public class NetMQManager : MonoBehaviour
             listenerThread.Join();
         }
         subscriberSocket?.Close();
+        subscriberSocket?.Dispose();
         NetMQConfig.Cleanup(false);
     }
 }
