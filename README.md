@@ -1,14 +1,37 @@
-# Kidney-Hololens-Gaze-Track
-This is repo for the HoloLens AR app for Kidney Gaze Share Project. It is developed with Unity 2021.3.4f1 and MRTK 2. It uses the source code from [ArUcoDetectionHoloLens-Unity](https://github.com/doughtmw/ArUcoDetectionHoloLens-Unity) for on-hololens device aruco marker trackign capabilities.
+# Eye Gaze Metric Analysis – Unity Integration
 
-## Setup and Development
-- Clone the repository.
-- Make sure the corret Unity version (2021.3.4f1), the recommended windows sdk and other dependencies are installed.
-- Open the the project, and make edits as needed.
-- Deploy to HoloLens like a normal mrtk Unity project for HoloLens.
+This repository contains the Unity-based application used in the **Eye Gaze Share** system described in the MICCAI 2025 accepted paper:
 
-## Usage
-- Make sure you have two HoloLenses with the same version of the app deployed.
-- Attach 4 Aruco Markers to a screen. (TODO: more detailed hardware setup)
-- Refer to [Kidney-Gaze-User-Study-Tools](https://github.com/li-fangjie/Kidney-Gaze-User-Study-Tools) for the experiment controller code and setup. 
-- Open the app on the two HoloLenses and follow instructions.
+**From Sight to Skill: A Surgeon-Centered Augmented Reality System for Ureteroscopy Training**
+
+## Overview
+
+This Unity project is a key component of the Eye Gaze Share platform. It enables real-time integration of eye gaze data into an augmented reality (AR) surgical training simulation for ureteroscopy.
+
+## Repository Structure
+
+- `Assets/`: Unity assets for the AR simulation
+- `Scripts/`: Custom C# scripts for gaze integration, visualization, and interaction
+- `Scenes/`: Unity scenes used for the training environment
+- `Prefabs/`: Reusable UI and tool components
+- `Plugins/`: Third-party or platform-specific dependencies (e.g., NetMQ, MRTK, etc.)
+
+## Related Repository
+
+If you are looking for the **data processing and gaze metrics computation scripts**, please see:
+
+- **[Gaze Data Processing & Metric Analysis](https://github.com/jatoum/Eye_Gaze_Metric_Analysis)  
+(This companion repository includes Python scripts for analyzing gaze patterns, calculating fixation metrics, and visualizing gaze behavior.)
+
+- **[Kidney Gaze User Study Tools](https://github.com/li-fangjie/Kidney-Gaze-User-Study-Tools):**  
+  Tools used in the user study for collecting gaze data during studies.
+
+
+## Setup Instructions
+
+1. Open this project with **Unity 2021.3 LTS** or newer.
+2. Make sure you have the following Unity packages installed:
+   - Mixed Reality Toolkit (MRTK)
+   - NetMQ or equivalent messaging system
+3. Connect the system to real-time gaze input or replay pre-recorded gaze data.
+4. Build for the appropriate platform (e.g., HoloLens or PC).
