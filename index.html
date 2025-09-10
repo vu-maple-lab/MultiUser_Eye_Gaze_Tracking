@@ -20,6 +20,45 @@
   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
   allowfullscreen>
 </iframe>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body { font-family: Arial, sans-serif; margin: 40px; }
+    h2 { color: #2c3e50; margin-top: 50px; }
+    .gallery { display: flex; gap: 20px; justify-content: center; margin-bottom: 15px; }
+    .gallery img { max-width: 100%; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+    .caption { text-align: center; font-size: 16px; margin-bottom: 40px; color: #444; }
+    .fullwidth img { width: 100%; border-radius: 8px; }
+    .two-column { display: flex; gap: 20px; justify-content: center; }
+    .two-column img { width: 48%; border-radius: 8px; }
+  </style>
+</head>
+<body>
+  <h1>Project Figures</h1>
+  <div class="gallery">
+    <img src="images/M1_marker_cropped.pdf" alt="Marker 1">
+    <img src="images/M2_marker_cropped.pdf" alt="Marker 2">
+    <img src="images/M3_marker_cropped.pdf" alt="Marker 3">
+  </div>
+  <div class="caption">
+    The three devised AR markers informed by the guidelines generated from our previous semi-structured user study with co-design activity. 
+    The marker sizes are not reflected in the figure.
+  </div>
+  <div class="fullwidth">
+    <img src="images/workflow_diagram_v1_cropped.pdf" alt="Eye Gaze Process">
+  </div>
+  <div class="caption">
+    Diagram showing the AR application's eye gaze overlay process with the virtual monitor fitting and defining the relevant frame transformations.
+  </div>
+  <div class="two-column">
+    <img src="images/user_setup_cropped.pdf" alt="User Study Setup">
+    <img src="images/user_study_edits_unblurred_cropped.pdf" alt="Expert and Trainee">
+  </div>
+  <div class="caption">
+    (a) Our user study setup includes a ureteroscope for kidney phantom navigation and ArUco markers for monitor registration. 
+    (b) Expert and trainee performing simulated ureteroscopy.
+  </div>
+</body>
   <p>
     Check out the project on 
     <a href="https://github.com/jatoum/MultiUser_Eye_Gaze_Tracking
