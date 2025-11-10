@@ -121,23 +121,31 @@
       border-top: 1px solid #e5e7eb;
     }
 
-    @media (max-width: 600px) {
-      main {
-        padding: 30px 20px;
-      }
+   @media (max-width: 600px) {
+  main {
+    padding: 30px 20px;
+  }
 
-      img {
-        height: 180px;
-      }
+  img {
+    height: 180px;
+  }
 
-      h1 {
-        font-size: 1.5em;
-      }
+  h1 {
+    font-size: 1.5em;
+  }
 
-      h2 {
-        font-size: 1.3em;
-      }
-    }
+  h2 {
+    font-size: 1.3em;
+  }
+
+  /* Responsive YouTube video */
+  .video-section iframe {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+  }
+}
+
   </style>
 </head>
 
