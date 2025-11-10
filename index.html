@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <title>MultiUser_Eye_Gaze_Tracking</title>
   <style>
-    /* === Global Styles === */
     body {
       font-family: 'Segoe UI', Roboto, Arial, sans-serif;
       color: #333;
@@ -40,6 +39,7 @@
       color: #1a202c;
       margin-top: 60px;
       font-size: 1.6em;
+      text-align: center;
     }
 
     p {
@@ -57,10 +57,9 @@
       text-decoration: underline;
     }
 
-    /* === Image Styles === */
     img {
       width: 100%;
-      height: 250px;
+      height: 220px;
       object-fit: contain;
       border-radius: 10px;
       background-color: #f8f9fa;
@@ -82,13 +81,12 @@
       margin-right: auto;
     }
 
-    /* === Layouts === */
     .gallery {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
       gap: 20px;
       justify-items: center;
-      margin: 40px 0 20px;
+      margin: 30px 0 20px;
     }
 
     .fullwidth {
@@ -129,7 +127,7 @@
       }
 
       img {
-        height: 200px;
+        height: 180px;
       }
 
       h1 {
@@ -161,49 +159,76 @@
     <div class="section abstract">
       <h2>Project Description</h2>
       <p>
-        The number of kidney stone cases in the U.S. has tripled since 1980. Unfortunately, 23% of kidney stone removal surgeries require repeat procedures within 20 months. The high repeat surgery rate is often due to surgeons missing stones in the initial treatment. Effective training can reduce the need for re-operation, yet learning opportunities in the operating room (OR) are limited, as patient care must take priority.
+        The number of kidney stone cases in the United States has tripled since 1980. Approximately 23% of kidney stone removal procedures require repeat operations within 20 months, often due to stones being missed during the initial treatment. Effective training can reduce this reoperation rate; however, opportunities for intraoperative learning are limited, as patient care must take precedence.
       </p>
       <p>
-        Augmented reality (AR) can improve the effectiveness of training in the OR by providing real-time visual feedback, but the interface must be carefully designed not to interfere with clinical workflow. Building on prior design guidelines and AR training tools, we design and evaluate the effectiveness of enhancing training through three AR gaze markers.
+        Augmented reality (AR) systems have been shown to improve training effectiveness by providing real-time visual feedback, though careful interface design is necessary to ensure compatibility with clinical workflow. Building upon prior design guidelines and AR-based surgical training tools, this work investigates the effect of providing visual guidance through three distinct AR gaze markers.
       </p>
       <p>
-        Our AR training system tracks the expert's eye gaze and projects the marker onto the trainee’s head-mounted display to provide visual guidance. Eight trainees performed a simulated ureteroscopy task of identifying kidney stones in high-fidelity kidney phantoms while guided by an expert. We record the number of stones they found, time, and eye-gaze metrics. At the end of each trial, trainees provide subjective feedback on task load and performance through the NASA-TLX questionnaire.
+        The AR training system tracks the expert surgeon’s eye gaze and projects a corresponding marker onto the trainee’s head-mounted display. Eight surgical trainees performed a simulated ureteroscopy task in high-fidelity kidney phantoms while guided by an expert. The number of stones identified, task duration, and gaze-related metrics were recorded. Subjective assessments were also collected using the NASA-TLX questionnaire.
       </p>
       <p>
-        Results show that while some gaze markers increased perceived mental demand, they enhanced engagement and performance. Gaze metrics revealed that marker shape affects cognitive load, as measured by the fixation-to-saccades ratio. By translating prior design principles into an AR-based guidance system, this work supports intraoperative training and highlights AR’s potential in surgical education.
+        The findings indicated that although some markers increased perceived mental demand, they enhanced engagement and improved performance. Gaze analysis demonstrated that marker design influences cognitive load, as reflected by fixation-to-saccade ratios. The results highlight AR’s potential in advancing intraoperative surgical training through effective gaze-based design.
       </p>
     </div>
 
-    <!-- Three AR markers side by side -->
-    <div class="gallery">
-      <img src="images/M1_marker_cropped.svg" alt="Marker 1">
-      <img src="images/M2_marker_cropped.svg" alt="Marker 2">
-      <img src="images/M3_marker_cropped.svg" alt="Marker 3">
-    </div>
-    <div class="caption">
-      The three devised AR markers informed by the guidelines generated from our previous semi-structured user study with co-design activity. The marker sizes are not reflected in the figure.
-    </div>
+    <!-- Eye Gaze Marker Co-Design Section -->
+    <div class="section co-design">
+      <h2>Eye Gaze Marker Co-Design</h2>
+      <p>
+        The three AR gaze markers were developed following design guidelines derived from a prior semi-structured co-design study. Each marker was designed to support clear visual communication between the expert and trainee while minimizing cognitive load. The designs aimed to reflect variations in visual salience and movement characteristics that align with surgical attention cues.
+      </p>
 
-    <!-- Fullwidth workflow diagram -->
-    <div class="fullwidth">
-      <img src="images/workflow_diagram_v1_cropped.svg" alt="Eye Gaze Process">
-    </div>
-    <div class="caption">
-      Diagram showing the AR application's eye gaze overlay process with the virtual monitor fitting and defining the relevant frame transformations.
-    </div>
-
-    <!-- Two-column section -->
-    <div class="two-column">
-      <div>
-        <img src="images/user_setup_cropped.svg" alt="User Study Setup">
-        <div class="caption">
-          (a) Our user study setup includes a ureteroscope for kidney phantom navigation and ArUco markers for monitor registration.
-        </div>
+      <div class="gallery">
+        <img src="images/M1_marker_cropped.svg" alt="Marker 1">
+        <img src="images/M2_marker_cropped.svg" alt="Marker 2">
+        <img src="images/M3_marker_cropped.svg" alt="Marker 3">
       </div>
-      <div>
-        <img src="images/user_study_edits_unblurred_cropped.svg" alt="Expert and Trainee">
-        <div class="caption">
-          (b) Expert and trainee performing simulated ureteroscopy.
+      <div class="caption">
+        The three devised AR gaze markers informed by the guidelines generated from the co-design process. The marker sizes are not reflected in the figure.
+      </div>
+    </div>
+
+    <!-- System Workflow Section -->
+    <div class="section workflow">
+      <h2>System Workflow</h2>
+      <p>
+        A real-time AR application was developed to share expert surgeons’ eye gaze with trainees. The application was implemented in Unity using the Mixed Reality Toolkit (MRTK2) and Photon Unity Networking (PUN). Gaze data were captured using the onboard sensors of the HoloLens 2. Prior to each study session, an eye calibration procedure was performed to ensure accurate tracking.
+      </p>
+      <p>
+        During the study, both users stood side by side facing a surgical monitor that was localized using four ArUco markers. The positions of the bottom and left markers were used to determine the monitor’s width and height, respectively, while the virtual monitor’s position was defined by averaging all marker locations. This configuration enabled the expert’s gaze and frame transformations to be transmitted via PUN, allowing the trainee’s HoloLens to project the expert’s gaze accurately onto a shared virtual screen. This setup ensured visibility from all angles and reduced positional bias. A remote-control interface was used to manage marker display throughout the sessions.
+      </p>
+
+      <div class="fullwidth">
+        <img src="images/workflow_diagram_v1_cropped.svg" alt="Eye Gaze Workflow Diagram">
+      </div>
+      <div class="caption">
+        Diagram illustrating the AR application’s eye gaze overlay workflow, including virtual monitor fitting and frame transformations.
+      </div>
+    </div>
+
+    <!-- User Study Section -->
+    <div class="section study">
+      <h2>User Study</h2>
+      <p>
+        A user study was conducted to evaluate the effectiveness of the designed markers. The study involved one expert surgeon and eight surgical trainees. In each trial, a trainee navigated a kidney phantom using a LithoVue ureteroscope (Boston Scientific, Marlborough, MA) under the expert’s guidance. The trainee was instructed to explore the kidney and report the number of stones discovered. Each phantom contained five stones, though this number was not disclosed to participants.
+      </p>
+      <p>
+        Each trainee completed four trials—one with each of the three marker designs and one with no marker. In the no-marker condition, guidance was provided verbally, consistent with the standard of care. In the marker conditions, both verbal and visual feedback were presented through the HoloLens 2. The order of markers and phantoms was randomized to minimize learning bias.
+      </p>
+
+      <div class="two-column">
+        <div>
+          <img src="images/user_setup_cropped.svg" alt="User Study Setup">
+          <div class="caption">
+            (a) The user study setup, including the ureteroscope and ArUco markers used for monitor registration.
+          </div>
+        </div>
+        <div>
+          <img src="images/user_study_edits_unblurred_cropped.svg" alt="Expert and Trainee Study Session">
+          <div class="caption">
+            (b) The expert and trainee performing the simulated ureteroscopy task.
+          </div>
         </div>
       </div>
     </div>
@@ -212,10 +237,7 @@
     <div class="section conclusion">
       <h2>Conclusion</h2>
       <p>
-        This work evaluated the impact of three gaze markers in an AR gaze-based training application. Each trainee performed ureteroscopy on four phantoms, using each of the gaze markers with verbal feedback or verbal feedback alone. We report trainees' task performance, gaze metrics, and self-reported task load (NASA-TLX).
-      </p>
-      <p>
-        Our results show that well-designed markers reduce cognitive load and enhance task engagement. By emphasizing surgeon-centered AR design, our work establishes a foundation for AR-assisted surgical training and medical education.
+        This work evaluated the impact of three gaze markers in an AR gaze-based training system. Each trainee performed ureteroscopy on four phantoms, guided by verbal feedback or by a combination of verbal and visual feedback. Task performance, gaze metrics, and perceived workload were recorded. The results indicated that appropriately designed gaze markers can reduce cognitive load and enhance task engagement. The study underscores the importance of surgeon-centered AR design in advancing surgical training and education.
       </p>
     </div>
 
