@@ -167,19 +167,14 @@
     <div class="section abstract">
       <h2>Project Description</h2>
       <p>
-        The number of kidney stone cases in the United States has tripled since 1980. Approximately 23% of kidney stone removal procedures require repeat operations within 20 months, often due to stones being missed during the initial treatment. Effective training can reduce this reoperation rate; however, opportunities for intraoperative learning are limited, as patient care must take precedence.
+        Kidney stone cases in the U.S. have significantly increased, and nearly a quarter of removal procedures require repeat operations because stones are often missed. Improving surgical training could reduce these repeat procedures, but real intraoperative training opportunities are limited.
       </p>
       <p>
-        Augmented reality (AR) systems have been shown to improve training effectiveness by providing real-time visual feedback, though careful interface design is necessary to ensure compatibility with clinical workflow. Building upon prior design guidelines and AR-based surgical training tools, this work investigates the effect of providing visual guidance through three distinct AR gaze markers.
+        This project explores how augmented reality (AR) can support surgical training by projecting an expert surgeon’s eye gaze into a trainee’s head-mounted display. Using three different AR gaze marker designs, eight surgical trainees performed a simulated ureteroscopy task on realistic kidney phantoms while guided by an expert. Performance measures, including stones found, task time, and gaze metrics, were collected along with subjective workload ratings (NASA-TLX).
       </p>
       <p>
-        The AR training system tracks the expert surgeon’s eye gaze and projects a corresponding marker onto the trainee’s head-mounted display. Eight surgical trainees performed a simulated ureteroscopy task in high-fidelity kidney phantoms while guided by an expert. The number of stones identified, task duration, and gaze-related metrics were recorded. Subjective assessments were also collected using the NASA-TLX questionnaire.
-      </p>
-      <p>
-        The findings indicated that although some markers increased perceived mental demand, they enhanced engagement and improved performance. Gaze analysis demonstrated that marker design influences cognitive load, as reflected by fixation-to-saccade ratios. The results highlight AR’s potential in advancing intraoperative surgical training through effective gaze-based design.
-      </p>
+        Results show that while some AR markers increased perceived mental effort, they also boosted engagement and improved task performance. Gaze analysis further revealed that marker design affects cognitive load. Overall, the study demonstrates the potential of AR gaze based guidance to enhance surgical training effectiveness.      </p>
     </div>
-
     <!-- Eye Gaze Marker Co-Design Section -->
     <div class="section co-design">
       <h2>Eye Gaze Marker Co-Design</h2>
@@ -201,12 +196,12 @@
     <div class="section workflow">
       <h2>System Workflow</h2>
       <p>
-        A real-time AR application was developed to share expert surgeons’ eye gaze with trainees. The application was implemented in Unity using the Mixed Reality Toolkit (MRTK2) and Photon Unity Networking (PUN). Gaze data were captured using the onboard sensors of the HoloLens 2. Prior to each study session, an eye calibration procedure was performed to ensure accurate tracking.
+        A real-time AR application was created to share an expert surgeon’s eye gaze with trainees using HoloLens 2 devices. Built in Unity with MRTK2 and Photon Unity Networking (PUN), the system captured expert gaze using the headset’s sensors, following a calibration procedure for accuracy.
       </p>
       <p>
-        During the study, both users stood side by side facing a surgical monitor that was localized using four ArUco markers. The positions of the bottom and left markers were used to determine the monitor’s width and height, respectively, while the virtual monitor’s position was defined by averaging all marker locations. This configuration enabled the expert’s gaze and frame transformations to be transmitted via PUN, allowing the trainee’s HoloLens to project the expert’s gaze accurately onto a shared virtual screen. This setup ensured visibility from all angles and reduced positional bias. A remote-control interface was used to manage marker display throughout the sessions.
+        During each study, the expert and trainee stood side by side facing a surgical monitor tracked with four ArUco markers. These markers provided the monitor’s dimensions and position, enabling precise alignment of the virtual display. The expert’s gaze data and coordinate transformations were streamed through PUN so the trainee saw the expert’s gaze projected correctly on their own virtual screen, regardless of viewing angle. A remote interface was used to control the display of visual markers during the study.
       </p>
-
+      
       <div class="fullwidth">
         <img src="images/workflow_diagram_v1_cropped.svg" alt="Eye Gaze Workflow Diagram">
       </div>
@@ -219,10 +214,10 @@
     <div class="section study">
       <h2>User Study</h2>
       <p>
-        A user study was conducted to evaluate the effectiveness of the designed markers. The study involved one expert surgeon and eight surgical trainees. In each trial, a trainee navigated a kidney phantom using a LithoVue ureteroscope (Boston Scientific, Marlborough, MA) under the expert’s guidance. The trainee was instructed to explore the kidney and report the number of stones discovered. Each phantom contained five stones, though this number was not disclosed to participants.
+        The study included one expert surgeon and eight surgical trainees. In each trial, the trainee used a LithoVue ureteroscope to navigate a kidney phantom while guided by the expert. Trainees were asked to explore the kidney and report how many stones they found. Each phantom contained five stones, though participants were not informed of the true number.
       </p>
       <p>
-        Each trainee completed four trials—one with each of the three marker designs and one with no marker. In the no-marker condition, guidance was provided verbally, consistent with the standard of care. In the marker conditions, both verbal and visual feedback were presented through the HoloLens 2. The order of markers and phantoms was randomized to minimize learning bias.
+       Each trainee completed four trials: one using each of the three AR gaze marker designs and one control trial with no marker. In the no-marker condition, the expert provided only verbal guidance, reflecting standard practice. In the marker conditions, trainees received both verbal and visual guidance through the HoloLens 2. To reduce learning effects, the order of markers and the kidney phantoms was randomized across participants.
       </p>
 
       <div class="two-column">
@@ -244,17 +239,13 @@
     <div class="section results">
       <h2>Results and Evaluation</h2>
       <p>
-        Task performance and perceived workload were assessed using objective task metrics and subjective NASA-TLX evaluations. The results indicated that the use of augmented reality (AR) markers increased fixation duration on relevant regions, improved the percentage of stones found, and enhanced gaze behavior while reducing physical demand compared to the no-marker condition.
-      </p>
+        Task performance and workload were measured using objective metrics and NASA-TLX ratings. Overall, AR gaze markers improved fixation on relevant areas, increased stone detection rates, enhanced gaze behavior, and reduced physical demand compared to the no-marker condition.      </p>
       <p>
-        The <strong>M1</strong> design demonstrated the lowest mental and temporal demand, effort, and frustration, indicating reduced cognitive and temporal load. However, this design was associated with a greater gaze distance traveled, reflecting more extensive visual exploration.
-      </p>
+        The <strong>M1</strong> marker produced the lowest mental demand, temporal demand, effort, and frustration, indicating reduced cognitive load. However, it was associated with a larger gaze distance traveled, suggesting more extensive visual scanning.      </p>
       <p>
-        The <strong>M2</strong> marker achieved the best self-evaluated performance among participants, though it also showed higher effort and frustration levels, suggesting stronger task engagement. Its lower fixation-to-saccade ratio compared with the other markers reflected a decrease in cognitive load during visual scanning.
-      </p>
+        The <strong>M2</strong> yielded the highest self-rated performance but also increased perceived effort and frustration, reflecting deeper task engagement. Its lower fixation-to-saccade ratio suggested reduced cognitive load during scanning.      </p>
       <p>
-        The <strong>M3</strong> design resulted in the lowest percentage of stones found and higher mental demand and effort, indicating that its visual characteristics may have introduced additional cognitive processing.
-      </p>
+        The <strong>M3</strong> resulted in poorer performance, including the lowest stone detection rate and higher mental demand and effort, indicating that its visual design may have introduced unnecessary cognitive burden.      </p>
 
       <div class="two-column">
         <div>
