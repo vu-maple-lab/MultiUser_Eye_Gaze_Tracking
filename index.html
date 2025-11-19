@@ -70,6 +70,12 @@
     img:hover {
       transform: scale(1.03);
     }
+    
+    .video-container {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
 
     .caption {
       font-size: 0.9rem;
@@ -156,13 +162,15 @@
 
   <main>
     <h2>Project Demo Video</h2>
-    <iframe width="560" height="315"
-      src="https://www.youtube.com/embed/GJhmrXI4z8w"
-      title="MultiUser Eye Gaze Guidance App Demo"
-      frameborder="0"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-      allowfullscreen>
-    </iframe>
+     <div class="video-container">
+      <iframe width="560" height="315"
+        src="https://www.youtube.com/embed/GJhmrXI4z8w"
+        title="MultiUser Eye Gaze Guidance App Demo"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen>
+      </iframe>
+     </div>
 
     <div class="section abstract">
       <h2>Project Description</h2>
